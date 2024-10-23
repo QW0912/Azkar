@@ -52,6 +52,11 @@
         .athkar p {
             margin-bottom: 20px;
         }
+        .favorite {
+            color: gold;
+            font-size: 25px;
+            cursor: pointer;
+        }
         hr {
             border: none;
             border-top: 2px solid #00796b;
@@ -65,25 +70,6 @@
             text-align: justify;
             font-size: 18px;
             line-height: 2;
-        }
-
-        /* زر مشابه لزر أذكار المساء */
-        .surah-button {
-            font-size: 18px;
-            padding: 15px;
-            margin: 10px 0;
-            width: 100%;
-            border-radius: 10px;
-            border: none;
-            background-color: #00796b;
-            color: white;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .surah-button:hover {
-            background-color: #004d40;
-            transform: scale(1.05);
         }
 
         /* شاشة تسجيل الدخول */
@@ -104,14 +90,14 @@
             color: #ffffff;
         }
 
-        /* المفضلة */
-        .favorite {
-            color: gold;
-            font-size: 25px;
-            cursor: pointer;
+        /* سهم مخصص */
+        .arrow {
+            display: inline-block;
+            margin-top: 10px;
+            font-size: 30px;
+            color: #00796b;
         }
 
-        /* زر الوضع الليلي في مكان منفصل */
         .dark-mode-toggle {
             position: absolute;
             top: 20px;
@@ -126,43 +112,6 @@
         }
         .dark-mode-toggle:hover {
             background-color: #004d40;
-        }
-
-        .arrow {
-            display: inline-block;
-            margin-top: 10px;
-            font-size: 20px;
-            color: #00796b;
-        }
-
-        /* الدائرة */
-        .progress-circle {
-            position: relative;
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            border: 5px solid #4caf50;
-            margin: 10px auto;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        .progress-circle .progress-text {
-            position: absolute;
-            font-size: 22px;
-            font-weight: bold;
-            color: #00796b;
-        }
-        .progress-circle[data-progress="1"] {
-            background: conic-gradient(#4caf50 33%, #f0f7fa 33%);
-        }
-        .progress-circle[data-progress="2"] {
-            background: conic-gradient(#4caf50 66%, #f0f7fa 66%);
-        }
-        .progress-circle[data-progress="3"] {
-            background: conic-gradient(#4caf50 100%, #f0f7fa 100%);
         }
 
         /* الرسالة التنبيهية */
@@ -182,7 +131,7 @@
         <br>
         <button onclick="login()">الدخول</button>
         <p>إذا كنت جديد ولا تملك رقم تسلسلي خاص بك</p>
-        <div class="arrow">⬇</div>
+        <div class="arrow">⬇</div> <!-- تم استبدال السهم بنموذج تصميم خاص -->
         <button onclick="generateSerial()">الحصول على رقم تسلسلي جديد</button>
     </div>
 
@@ -271,50 +220,52 @@
 
         function showFavorites() {
             const athkarDiv = document.getElementById('athkar');
-            const favorites = favoriteAthkar[currentSerial] || [];
+            const favorites = favoriteAthkar[currentSerial] ||
+
+ [];
             athkarDiv.innerHTML = favorites.map(athkar => `
                 <p>${athkar.text}</p>
-                <div class="progress-circle" data-repeat="${athkar.repeat}" onclick="updateProgress(this)" data-progress="0">
-                    <span class="progress-text">0/${athkar.repeat}</span>
-                </div>
+                <span class="favorite" onclick="toggleFavorite('${athkar.text}')">★</span>
                 <hr>
             `).join('');
         }
 
+        function toggleFavorite(athkarText) {
+            if (favoriteAthkar[currentSerial].includes(athkarText)) {
+                favoriteAthkar[currentSerial] = favoriteAthkar[currentSerial].filter(athkar => athkar !== athkarText);
+            } else {
+                favoriteAthkar[currentSerial].push(athkarText);
+            }
+            saveFavorites();
+            alert('تم تعديل المفضلة.');
+        }
+
         function showMorning() {
             const morningAthkar = [
-                { text: "أصبحنا وأصبح الملك لله، والحمد لله، لا إله إلا الله وحده لا شريك له، له الملك وله الحمد وهو على كل شيء قدير...", repeat: 1 },
-                { text: "اللهم بك أصبحنا، وبك أمسينا، وبك نحيا وبك نموت، وإليك النشور.", repeat: 1 },
-                { text: "اللهم أنت ربي لا إله إلا أنت...", repeat: 1 },
-                { text: "سبحان الله وبحمده عدد خلقه...", repeat: 3 },
-                { text: "اللهم إني أصبحت أشهدك وأشهد حملة عرشك...", repeat: 4 },
-                { text: "حسبي الله لا إله إلا هو...", repeat: 7 },
-                { text: "بسم الله الذي لا يضر مع اسمه...", repeat: 3 },
-                { text: "اللهم صل وسلم على نبينا محمد...", repeat: 10 }
+                { text: "أصبحنا وأصبح الملك لله، والحمد لله، لا إله إلا الله وحده لا شريك له، له الملك وله الحمد وهو على كل شيء قدير..." },
+                { text: "اللهم بك أصبحنا، وبك أمسينا، وبك نحيا وبك نموت، وإليك النشور." },
+                { text: "اللهم أنت ربي لا إله إلا أنت..." },
+                { text: "سبحان الله وبحمده عدد خلقه..." }
             ];
             renderAthkar(morningAthkar);
         }
 
         function showEvening() {
             const eveningAthkar = [
-                { text: "أمسينا وأمسى الملك لله، والحمد لله، لا إله إلا الله وحده لا شريك له...", repeat: 1 },
-                { text: "اللهم بك أمسينا، وبك أصبحنا...", repeat: 1 },
-                { text: "اللهم أنت ربي لا إله إلا أنت...", repeat: 1 },
-                { text: "سبحان الله وبحمده عدد خلقه...", repeat: 3 },
-                { text: "اللهم إني أمسيت أشهدك وأشهد حملة عرشك...", repeat: 4 },
-                { text: "حسبي الله لا إله إلا هو...", repeat: 7 },
-                { text: "بسم الله الذي لا يضر مع اسمه...", repeat: 3 },
-                { text: "اللهم صل وسلم على نبينا محمد...", repeat: 10 }
+                { text: "أمسينا وأمسى الملك لله، والحمد لله، لا إله إلا الله وحده لا شريك له..." },
+                { text: "اللهم بك أمسينا، وبك أصبحنا..." },
+                { text: "اللهم أنت ربي لا إله إلا أنت..." },
+                { text: "سبحان الله وبحمده عدد خلقه..." }
             ];
             renderAthkar(eveningAthkar);
         }
 
         function showRandom() {
             const randomAthkar = [
-                { text: "يا حي يا قيوم، برحمتك أستغيث...", repeat: 1 },
-                { text: "اللهم إني أعوذ بك من الهم والحزن...", repeat: 1 },
-                { text: "اللهم إني أسألك العفو والعافية...", repeat: 1 },
-                { text: "اللهم إني أسألك الجنة وأعوذ بك من النار.", repeat: 1 }
+                { text: "يا حي يا قيوم، برحمتك أستغيث..." },
+                { text: "اللهم إني أعوذ بك من الهم والحزن..." },
+                { text: "اللهم إني أسألك العفو والعافية..." },
+                { text: "اللهم إني أسألك الجنة وأعوذ بك من النار." }
             ];
             renderAthkar(randomAthkar);
         }
@@ -323,61 +274,14 @@
             const athkarDiv = document.getElementById('athkar');
             athkarDiv.innerHTML = athkarList.map(athkar => `
                 <p>${athkar.text}</p>
-                <div class="progress-circle" data-repeat="${athkar.repeat}" onclick="updateProgress(this)" data-progress="0">
-                    <span class="progress-text">0/${athkar.repeat}</span>
-                </div>
+                <span class="favorite" onclick="toggleFavorite('${athkar.text}')">★</span>
                 <hr>
             `).join('');
         }
 
-        function updateProgress(circle) {
-            let progress = parseInt(circle.getAttribute('data-progress'));
-            const repeat = parseInt(circle.getAttribute('data-repeat'));
-
-            if (progress < repeat) {
-                progress++;
-                circle.setAttribute('data-progress', progress);
-                circle.querySelector('.progress-text').textContent = `${progress}/${repeat}`;
-                
-                // تحديث شكل الدائرة بناءً على التقدم
-                const percentage = (progress / repeat) * 100;
-                circle.style.background = `conic-gradient(#4caf50 ${percentage}%, #f0f7fa ${percentage}%)`;
-            }
-        }
-
         function showQuran() {
-            const quranDiv = document.getElementById('quran');
-            const surahs = [
-                { name: "الفاتحة", text: `بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ
-                الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ ﴿١﴾
-                الرَّحْمَنِ الرَّحِيمِ ﴿٢﴾
-                مَالِكِ يَوْمِ الدِّينِ ﴿٣﴾
-                إِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ ﴿٤﴾
-                اهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ ﴿٥﴾
-                صِرَاطَ الَّذِينَ أَنْعَمْتَ عَلَيْهِمْ غَيْرِ الْمَغْضُوبِ عَلَيْهِمْ وَلَا الضَّالِّينَ ﴿٦﴾` },
-
-                { name: "البقرة", text: `الم ﴿١﴾
-                ذَٰلِكَ الْكِتَابُ لَا رَيْبَ ۛ فِيهِ ۛ هُدًى لِلْمُتَّقِينَ ﴿٢﴾
-                الَّذِينَ يُؤْمِنُونَ بِالْغَيْبِ وَيُقِيمُونَ الصَّلَاةَ وَمِمَّا رَزَقْنَاهُمْ يُنفِقُونَ ﴿٣﴾
-                وَالَّذِينَ يُؤْمِنُونَ بِمَا أُنزِلَ إِلَيْكَ وَمَا أُنزِلَ مِن قَبْلِكَ وَبِالْآخِرَةِ هُمْ يُوقِنُونَ ﴿٤﴾...` },
-
-                { name: "آل عمران", text: `الم ﴿١﴾
-                اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ ﴿٢﴾
-                نَزَّلَ عَلَيْكَ الْكِتَابَ بِالْحَقِّ مُصَدِّقًا لِّمَا بَيْنَ يَدَيْهِ وَأَنزَلَ التَّوْرَاةَ وَالْإِنجِيلَ ﴿٣﴾...` }
-            ];
-
-            quranDiv.innerHTML = "<h2>القرآن الكريم</h2>" + surahs.map(surah => `
-                <button class="surah-button" onclick="showSurah('${surah.text}')">${surah.name}</button>
-            `).join('');
-            quranDiv.style.display = 'block';
-            document.getElementById('surah-content').style.display = 'none';
-        }
-
-        function showSurah(surahText) {
-            const surahDiv = document.getElementById('surah-content');
-            surahDiv.innerHTML = `<h2>نص السورة</h2><p>${surahText.replace(/\n/g, "<br>")}</p>`;
-            surahDiv.style.display = 'block';
-            document.getElementById('quran').style.display = 'none';
+            // عند الضغط على زر القرآن الكريم، يظهر التنبيه التالي
+            alert("مدري ليه مو راضي يضبط، والصراحه تعبت وانا احاول احل المشكله لاني حاولت كثير، المهم اصبروا لين يصير لي خلق وبإذن الله راح احاول من جديد ويشتغل معكم👍🏻");
         }
 
         function toggleDarkMode() {
