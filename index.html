@@ -246,9 +246,7 @@
         }
 
         function loadFavorites() {
-            const savedFavorites = localStorage.getItem(`favorites_${
-
-currentSerial}`);
+            const savedFavorites = localStorage.getItem(`favorites_${currentSerial}`);
             if (savedFavorites) {
                 favoriteAthkar[currentSerial] = JSON.parse(savedFavorites);
             } else {
@@ -351,12 +349,12 @@ currentSerial}`);
             const quranDiv = document.getElementById('quran');
             const surahs = [
                 { name: "الفاتحة", text: `بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ
-                الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ ﴿٢﴾
-                الرَّحْمَنِ الرَّحِيمِ ﴿٣﴾
-                مَالِكِ يَوْمِ الدِّينِ ﴿٤﴾
-                إِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ ﴿٥﴾
-                اهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ ﴿٦﴾
-                صِرَاطَ الَّذِينَ أَنْعَمْتَ عَلَيْهِمْ غَيْرِ الْمَغْضُوبِ عَلَيْهِمْ وَلَا الضَّالِّينَ ﴿٧﴾` },
+                الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ ﴿١﴾
+                الرَّحْمَنِ الرَّحِيمِ ﴿٢﴾
+                مَالِكِ يَوْمِ الدِّينِ ﴿٣﴾
+                إِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ ﴿٤﴾
+                اهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ ﴿٥﴾
+                صِرَاطَ الَّذِينَ أَنْعَمْتَ عَلَيْهِمْ غَيْرِ الْمَغْضُوبِ عَلَيْهِمْ وَلَا الضَّالِّينَ ﴿٦﴾` },
 
                 { name: "البقرة", text: `الم ﴿١﴾
                 ذَٰلِكَ الْكِتَابُ لَا رَيْبَ ۛ فِيهِ ۛ هُدًى لِلْمُتَّقِينَ ﴿٢﴾
@@ -384,12 +382,6 @@ currentSerial}`);
 
         function toggleDarkMode() {
             document.body.classList.toggle('dark-mode');
-        }
-
-        // إضافة مؤثرات صوتية جذابة (ليس موسيقى)
-        function playSound() {
-            var audio = new Audio('click-sound.mp3'); // يجب عليك تحميل ملف الصوت "click-sound.mp3" إلى مجلد المشروع
-            audio.play();
         }
     </script>
 </body>
