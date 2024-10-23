@@ -85,15 +85,11 @@
         .progress-circle[data-progress="3"] {
             background: conic-gradient(#4caf50 100%, #f0f7fa 100%);
         }
-        footer {
-            margin-top: 30px;
-            font-size: 16px;
-            color: #00796b;
-        }
-        footer a {
-            color: #00796b;
-            text-decoration: none;
-            font-weight: bold;
+
+        /* شاشة تسجيل الدخول */
+        .login-screen {
+            display: none;
+            text-align: center;
         }
 
         /* Dark Mode */
@@ -123,19 +119,6 @@
             cursor: pointer;
         }
 
-        /* التحديات */
-        .challenge-container {
-            margin-top: 20px;
-            color: #00796b;
-        }
-
-        /* النقاط والجوائز */
-        .score {
-            font-size: 20px;
-            margin-top: 20px;
-            color: #00796b;
-        }
-
         /* زر الوضع الليلي في مكان منفصل */
         .dark-mode-toggle {
             position: absolute;
@@ -155,24 +138,27 @@
     </style>
 </head>
 <body>
-    <button class="dark-mode-toggle" onclick="toggleDarkMode()">تبديل الوضع الليلي</button>
 
-    <h1>موقع أذكار الصباح والمساء</h1>
+    <div class="login-screen" id="login-screen">
+        <h1>مرحبًا بك في موقع الأذكار</h1>
+        <p>أدخل الرقم التسلسلي الخاص بك:</p>
+        <input type="text" id="serial-input" placeholder="الرقم التسلسلي المكون من 20 رقمًا" maxlength="20">
+        <br>
+        <button onclick="login()">الدخول</button>
+        <p>أو</p>
+        <button onclick="generateSerial()">الحصول على رقم تسلسلي جديد</button>
+    </div>
 
-    <div class="container">
+    <div class="container" id="main-content" style="display: none;">
+        <button class="dark-mode-toggle" onclick="toggleDarkMode()">تبديل الوضع الليلي</button>
+
+        <h1>أذكار الصباح والمساء</h1>
         <button onclick="showMorning()">أذكار الصباح</button>
         <button onclick="showEvening()">أذكار المساء</button>
         <button onclick="showRandom()">ذكر عشوائي</button>
         <button onclick="addPersonalAthkar()">إضافة ذكر شخصي</button>
         <button onclick="showFavorites()">عرض المفضلة</button>
         <div id="athkar" class="athkar"></div>
-        <div class="challenge-container" id="challenge">
-            <h3>التحدي اليومي: قراءة 10 أذكار</h3>
-            <p id="challenge-progress">0/10 أذكار مكتملة</p>
-        </div>
-        <div class="score">
-            النقاط: <span id="score">0</span>
-        </div>
     </div>
 
     <footer>
@@ -180,97 +166,54 @@
     </footer>
 
     <script>
-        const clickSound = new Audio('https://www.myinstants.com/media/sounds/button-click.mp3'); // رابط صوت النقر
-        let score = 0;
-        const favoriteAthkar = [];
-        const morningAthkar = [
-            { text: "أصبحنا وأصبح الملك لله، والحمد لله، لا إله إلا الله وحده لا شريك له، له الملك وله الحمد وهو على كل شيء قدير. رب أسألك خير ما في هذا اليوم وخير ما بعده، وأعوذ بك من شر ما في هذا اليوم وشر ما بعده، وأعوذ بك من الكسل وسوء الكبر، وأعوذ بك من عذاب في النار وعذاب في القبر.", repeat: 1 },
-            { text: "اللهم بك أصبحنا، وبك أمسينا، وبك نحيا وبك نموت، وإليك النشور.", repeat: 1 },
-            { text: "اللهم أنت ربي لا إله إلا أنت، خلقتني وأنا عبدك، وأنا على عهدك ووعدك ما استطعت، أعوذ بك من شر ما صنعت، أبوء لك بنعمتك عليّ وأبوء بذنبي، فاغفر لي، فإنه لا يغفر الذنوب إلا أنت.", repeat: 1 },
-            { text: "سبحان الله وبحمده عدد خلقه ورضا نفسه وزنة عرشه ومداد كلماته.", repeat: 3 },
-            { text: "اللهم إني أصبحت أشهدك، وأشهد حملة عرشك وملائكتك وجميع خلقك أنك أنت الله لا إله إلا أنت وحدك لا شريك لك، وأن محمدًا عبدك ورسولك. (أربع مرات)", repeat: 4 },
-            { text: "حسبي الله لا إله إلا هو، عليه توكلت وهو رب العرش العظيم. (سبع مرات)", repeat: 7 },
-            { text: "بسم الله الذي لا يضر مع اسمه شيء في الأرض ولا في السماء وهو السميع العليم. (ثلاث مرات)", repeat: 3 },
-            { text: "اللهم صل وسلم على نبينا محمد. (عشر مرات)", repeat: 10 }
-        ];
+        const favoriteAthkar = {};
+        let currentSerial = '';
 
-        const eveningAthkar = [
-            { text: "أمسينا وأمسى الملك لله، والحمد لله، لا إله إلا الله وحده لا شريك له، له الملك وله الحمد وهو على كل شيء قدير. رب أسألك خير ما في هذه الليلة وخير ما بعدها، وأعوذ بك من شر ما في هذه الليلة وشر ما بعدها، وأعوذ بك من الكسل وسوء الكبر، وأعوذ بك من عذاب في النار وعذاب في القبر.", repeat: 1 },
-            { text: "اللهم بك أمسينا، وبك أصبحنا، وبك نحيا وبك نموت، وإليك المصير.", repeat: 1 },
-            { text: "اللهم أنت ربي لا إله إلا أنت، خلقتني وأنا عبدك، وأنا على عهدك ووعدك ما استطعت، أعوذ بك من شر ما صنعت، أبوء لك بنعمتك عليّ وأبوء بذنبي، فاغفر لي، فإنه لا يغفر الذنوب إلا أنت.", repeat: 1 },
-            { text: "سبحان الله وبحمده عدد خلقه ورضا نفسه وزنة عرشه ومداد كلماته.", repeat:
+        window.onload = function () {
+            const savedSerial = localStorage.getItem('userSerial');
+            if (savedSerial) {
+                currentSerial = savedSerial;
+                loadFavorites();
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('main-content').style.display = 'block';
+            } else {
+                document.getElementById('login-screen').style.display = 'block';
+            }
+        };
 
- 3 },
-            { text: "اللهم إني أمسيت أشهدك، وأشهد حملة عرشك وملائكتك وجميع خلقك أنك أنت الله لا إله إلا أنت وحدك لا شريك لك، وأن محمدًا عبدك ورسولك. (أربع مرات)", repeat: 4 },
-            { text: "حسبي الله لا إله إلا هو، عليه توكلت وهو رب العرش العظيم. (سبع مرات)", repeat: 7 },
-            { text: "بسم الله الذي لا يضر مع اسمه شيء في الأرض ولا في السماء وهو السميع العليم. (ثلاث مرات)", repeat: 3 },
-            { text: "اللهم صل وسلم على نبينا محمد. (عشر مرات)", repeat: 10 }
-        ];
-
-        const randomAthkar = [
-            { text: "يا حي يا قيوم، برحمتك أستغيث، أصلح لي شأني كله ولا تكلني إلى نفسي طرفة عين.", repeat: 1 },
-            { text: "اللهم إني أعوذ بك من الهم والحزن، والعجز والكسل، والبخل والجبن، وضلع الدين وغلبة الرجال.", repeat: 1 },
-            { text: "اللهم إني أسألك العفو والعافية في الدنيا والآخرة.", repeat: 1 },
-            { text: "اللهم إني أسألك الجنة وأعوذ بك من النار.", repeat: 1 }
-        ];
-
-        let personalAthkar = [];
-        let challengeProgress = 0;
-
-        function renderAthkar(athkarList) {
-            const athkarDiv = document.getElementById('athkar');
-            athkarDiv.innerHTML = athkarList.map((athkar, index) => {
-                return `
-                    <p>${athkar.text}</p>
-                    <div class="progress-circle" data-progress="0" data-repeat="${athkar.repeat}" onclick="updateProgress(this)">
-                        <span class="progress-text">0/${athkar.repeat}</span>
-                    </div>
-                    <hr>`;
-            }).join('');
-        }
-
-        function showMorning() {
-            renderAthkar(morningAthkar);
-        }
-
-        function showEvening() {
-            renderAthkar(eveningAthkar);
-        }
-
-        function showRandom() {
-            const allAthkar = [...morningAthkar, ...eveningAthkar, ...randomAthkar, ...personalAthkar];
-            const randomIndex = Math.floor(Math.random() * allAthkar.length);
-            renderAthkar([allAthkar[randomIndex]]);
-        }
-
-        function updateProgress(circle) {
-            let progress = parseInt(circle.getAttribute('data-progress'));
-            const repeat = parseInt(circle.getAttribute('data-repeat'));
-
-            if (progress < repeat) {
-                progress++;
-                circle.setAttribute('data-progress', progress);
-                circle.querySelector('.progress-text').textContent = `${progress}/${repeat}`;
-                
-                // تشغيل صوت النقر
-                clickSound.play();
-                
-                // تحديث شكل الدائرة بناءً على التقدم
-                const percentage = (progress / repeat) * 100;
-                circle.style.background = `conic-gradient(#4caf50 ${percentage}%, #f0f7fa ${percentage}%)`;
-
-                // تحديث التحدي اليومي
-                challengeProgress++;
-                document.getElementById('challenge-progress').textContent = `${challengeProgress}/10 أذكار مكتملة`;
-                
-                // تحديث النقاط
-                score += 10;
-                document.getElementById('score').textContent = score;
+        function login() {
+            const serial = document.getElementById('serial-input').value;
+            if (serial.length === 20) {
+                currentSerial = serial;
+                localStorage.setItem('userSerial', serial);
+                loadFavorites();
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('main-content').style.display = 'block';
+            } else {
+                alert('الرجاء إدخال رقم تسلسلي مكون من 20 رقمًا.');
             }
         }
 
-        function toggleDarkMode() {
-            document.body.classList.toggle('dark-mode');
+        function generateSerial() {
+            const serial = 'xxxxxxxxxxxxxxxxxxxx'.replace(/[x]/g, () => (Math.random() * 9 | 0).toString());
+            currentSerial = serial;
+            localStorage.setItem('userSerial', serial);
+            alert(`رقمك التسلسلي: ${serial}`);
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('main-content').style.display = 'block';
+        }
+
+        function loadFavorites() {
+            const savedFavorites = localStorage.getItem(`favorites_${currentSerial}`);
+            if (savedFavorites) {
+                favoriteAthkar[currentSerial] = JSON.parse(savedFavorites);
+            } else {
+                favoriteAthkar[currentSerial] = [];
+            }
+        }
+
+        function saveFavorites() {
+            localStorage.setItem(`favorites_${currentSerial}`, JSON.stringify(favoriteAthkar[currentSerial]));
         }
 
         function addPersonalAthkar() {
@@ -278,14 +221,60 @@
             const repeatCount = parseInt(prompt('كم عدد مرات التكرار لهذا الذكر؟'));
             if (newAthkar && repeatCount > 0) {
                 const personalAthkarItem = { text: newAthkar, repeat: repeatCount };
-                personalAthkar.push(personalAthkarItem);
-                favoriteAthkar.push(personalAthkarItem);
+                favoriteAthkar[currentSerial].push(personalAthkarItem);
+                saveFavorites();
                 alert('تم إضافة الذكر الشخصي إلى المفضلة.');
             }
         }
 
         function showFavorites() {
-            renderAthkar(favoriteAthkar);
+            const athkarDiv = document.getElementById('athkar');
+            const favorites = favoriteAthkar[currentSerial] || [];
+            athkarDiv.innerHTML = favorites.map(athkar => `
+                <p>${athkar.text}</p>
+                <div class="progress-circle" data-repeat="${athkar.repeat}">${athkar.repeat} مرات</div>
+                <hr>
+            `).join('');
+        }
+
+        function showMorning() {
+            const morningAthkar = [
+                { text: "أصبحنا وأصبح الملك لله...", repeat: 1 },
+                { text: "اللهم بك أصبحنا...", repeat: 1 },
+                // باقي أذكار الصباح هنا
+            ];
+            renderAthkar(morningAthkar);
+        }
+
+        function showEvening() {
+            const eveningAthkar = [
+                { text: "أمسينا وأمسى الملك لله...", repeat: 1 },
+                { text: "اللهم بك أمسينا...", repeat: 1 },
+                // باقي أذكار المساء هنا
+            ];
+            renderAthkar(eveningAthkar);
+        }
+
+        function showRandom() {
+            const randomAthkar = [
+                { text: "يا حي يا قيوم...", repeat: 1 },
+                { text: "اللهم إني أعوذ بك من الهم والحزن...", repeat: 1 },
+                // أذكار عشوائية إضافية
+            ];
+            renderAthkar(randomAthkar);
+        }
+
+        function renderAthkar(athkarList) {
+            const athkarDiv = document.getElementById('athkar');
+            athkarDiv.innerHTML = athkarList.map(athkar => `
+                <p>${athkar.text}</p>
+                <div class="progress-circle" data-repeat="${athkar.repeat}">${athkar.repeat} مرات</div>
+                <hr>
+            `).join('');
+        }
+
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
         }
     </script>
 </body>
