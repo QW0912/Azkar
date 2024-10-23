@@ -12,6 +12,7 @@
             direction: rtl;
             margin: 0;
             padding: 0;
+            transition: background-color 0.3s, color 0.3s;
         }
         h1 {
             color: #00796b;
@@ -94,14 +95,30 @@
             text-decoration: none;
             font-weight: bold;
         }
+
+        /* Dark Mode */
+        .dark-mode {
+            background-color: #121212;
+            color: #ffffff;
+        }
+        .dark-mode button {
+            background-color: #1f1f1f;
+            color: white;
+        }
+        .dark-mode h1, .dark-mode footer a {
+            color: #ffffff;
+        }
     </style>
 </head>
 <body>
     <h1>موقع أذكار الصباح والمساء</h1>
+
     <div class="container">
         <button onclick="showMorning()">أذكار الصباح</button>
         <button onclick="showEvening()">أذكار المساء</button>
         <button onclick="showRandom()">ذكر عشوائي</button>
+        <button onclick="toggleDarkMode()">تبديل الوضع الليلي</button>
+        <button onclick="addPersonalAthkar()">إضافة ذكر شخصي</button>
         <div id="athkar" class="athkar"></div>
     </div>
 
@@ -140,6 +157,8 @@
             { text: "اللهم إني أسألك الجنة وأعوذ بك من النار.", repeat: 1 }
         ];
 
+        let personalAthkar = [];
+
         function renderAthkar(athkarList) {
             const athkarDiv = document.getElementById('athkar');
             athkarDiv.innerHTML = athkarList.map((athkar, index) => {
@@ -161,7 +180,7 @@
         }
 
         function showRandom() {
-            const allAthkar = [...morningAthkar, ...eveningAthkar, ...randomAthkar];
+            const allAthkar = [...morningAthkar, ...eveningAthkar, ...randomAthkar, ...personalAthkar];
             const randomIndex = Math.floor(Math.random() * allAthkar.length);
             renderAthkar([allAthkar[randomIndex]]);
         }
@@ -181,6 +200,18 @@
                 // تحديث شكل الدائرة بناءً على التقدم
                 const percentage = (progress / repeat) * 100;
                 circle.style.background = `conic-gradient(#4caf50 ${percentage}%, #f0f7fa ${percentage}%)`;
+            }
+        }
+
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+        }
+
+        function addPersonalAthkar() {
+            const newAthkar = prompt('أدخل ذكرًا شخصيًا:');
+            if (newAthkar) {
+                personalAthkar.push({ text: newAthkar, repeat: 1 });
+                alert('تم إضافة الذكر الشخصي.');
             }
         }
     </script>
