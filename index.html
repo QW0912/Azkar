@@ -98,15 +98,22 @@
 
         /* Dark Mode */
         .dark-mode {
-            background-color: #121212;
+            background-color: #000000;
             color: #ffffff;
         }
         .dark-mode button {
-            background-color: #1f1f1f;
+            background-color: #333333;
             color: white;
         }
         .dark-mode h1, .dark-mode footer a {
             color: #ffffff;
+        }
+        .dark-mode .progress-circle {
+            border-color: #333333;
+            background: #333333;
+        }
+        .dark-mode .progress-circle .progress-text {
+            color: white;
         }
 
         /* المفضلة */
@@ -128,16 +135,34 @@
             margin-top: 20px;
             color: #00796b;
         }
+
+        /* زر الوضع الليلي في مكان منفصل */
+        .dark-mode-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: #00796b;
+            color: white;
+            padding: 10px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .dark-mode-toggle:hover {
+            background-color: #004d40;
+        }
     </style>
 </head>
 <body>
+    <button class="dark-mode-toggle" onclick="toggleDarkMode()">تبديل الوضع الليلي</button>
+
     <h1>موقع أذكار الصباح والمساء</h1>
 
     <div class="container">
         <button onclick="showMorning()">أذكار الصباح</button>
         <button onclick="showEvening()">أذكار المساء</button>
         <button onclick="showRandom()">ذكر عشوائي</button>
-        <button onclick="toggleDarkMode()">تبديل الوضع الليلي</button>
         <button onclick="addPersonalAthkar()">إضافة ذكر شخصي</button>
         <button onclick="showFavorites()">عرض المفضلة</button>
         <div id="athkar" class="athkar"></div>
@@ -173,7 +198,9 @@
             { text: "أمسينا وأمسى الملك لله، والحمد لله، لا إله إلا الله وحده لا شريك له، له الملك وله الحمد وهو على كل شيء قدير. رب أسألك خير ما في هذه الليلة وخير ما بعدها، وأعوذ بك من شر ما في هذه الليلة وشر ما بعدها، وأعوذ بك من الكسل وسوء الكبر، وأعوذ بك من عذاب في النار وعذاب في القبر.", repeat: 1 },
             { text: "اللهم بك أمسينا، وبك أصبحنا، وبك نحيا وبك نموت، وإليك المصير.", repeat: 1 },
             { text: "اللهم أنت ربي لا إله إلا أنت، خلقتني وأنا عبدك، وأنا على عهدك ووعدك ما استطعت، أعوذ بك من شر ما صنعت، أبوء لك بنعمتك عليّ وأبوء بذنبي، فاغفر لي، فإنه لا يغفر الذنوب إلا أنت.", repeat: 1 },
-            { text: "سبحان الله وبحمده عدد خلقه ورضا نفسه وزنة عرشه ومداد كلماته.", repeat: 3 },
+            { text: "سبحان الله وبحمده عدد خلقه ورضا نفسه وزنة عرشه ومداد كلماته.", repeat:
+
+ 3 },
             { text: "اللهم إني أمسيت أشهدك، وأشهد حملة عرشك وملائكتك وجميع خلقك أنك أنت الله لا إله إلا أنت وحدك لا شريك لك، وأن محمدًا عبدك ورسولك. (أربع مرات)", repeat: 4 },
             { text: "حسبي الله لا إله إلا هو، عليه توكلت وهو رب العرش العظيم. (سبع مرات)", repeat: 7 },
             { text: "بسم الله الذي لا يضر مع اسمه شيء في الأرض ولا في السماء وهو السميع العليم. (ثلاث مرات)", repeat: 3 },
@@ -198,7 +225,6 @@
                     <div class="progress-circle" data-progress="0" data-repeat="${athkar.repeat}" onclick="updateProgress(this)">
                         <span class="progress-text">0/${athkar.repeat}</span>
                     </div>
-                    <span class="favorite" onclick="addToFavorites('${athkar.text}')">&#9733;</span>
                     <hr>`;
             }).join('');
         }
@@ -249,19 +275,17 @@
 
         function addPersonalAthkar() {
             const newAthkar = prompt('أدخل ذكرًا شخصيًا:');
-            if (newAthkar) {
-                personalAthkar.push({ text: newAthkar, repeat: 1 });
-                alert('تم إضافة الذكر الشخصي.');
+            const repeatCount = parseInt(prompt('كم عدد مرات التكرار لهذا الذكر؟'));
+            if (newAthkar && repeatCount > 0) {
+                const personalAthkarItem = { text: newAthkar, repeat: repeatCount };
+                personalAthkar.push(personalAthkarItem);
+                favoriteAthkar.push(personalAthkarItem);
+                alert('تم إضافة الذكر الشخصي إلى المفضلة.');
             }
         }
 
-        function addToFavorites(text) {
-            favoriteAthkar.push(text);
-            alert('تمت إضافة الذكر إلى المفضلة.');
-        }
-
         function showFavorites() {
-            renderAthkar(favoriteAthkar.map(text => ({ text, repeat: 1 })));
+            renderAthkar(favoriteAthkar);
         }
     </script>
 </body>
