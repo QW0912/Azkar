@@ -108,6 +108,26 @@
         .dark-mode h1, .dark-mode footer a {
             color: #ffffff;
         }
+
+        /* المفضلة */
+        .favorite {
+            color: gold;
+            font-size: 25px;
+            cursor: pointer;
+        }
+
+        /* التحديات */
+        .challenge-container {
+            margin-top: 20px;
+            color: #00796b;
+        }
+
+        /* النقاط والجوائز */
+        .score {
+            font-size: 20px;
+            margin-top: 20px;
+            color: #00796b;
+        }
     </style>
 </head>
 <body>
@@ -119,7 +139,15 @@
         <button onclick="showRandom()">ذكر عشوائي</button>
         <button onclick="toggleDarkMode()">تبديل الوضع الليلي</button>
         <button onclick="addPersonalAthkar()">إضافة ذكر شخصي</button>
+        <button onclick="showFavorites()">عرض المفضلة</button>
         <div id="athkar" class="athkar"></div>
+        <div class="challenge-container" id="challenge">
+            <h3>التحدي اليومي: قراءة 10 أذكار</h3>
+            <p id="challenge-progress">0/10 أذكار مكتملة</p>
+        </div>
+        <div class="score">
+            النقاط: <span id="score">0</span>
+        </div>
     </div>
 
     <footer>
@@ -128,6 +156,8 @@
 
     <script>
         const clickSound = new Audio('https://www.myinstants.com/media/sounds/button-click.mp3'); // رابط صوت النقر
+        let score = 0;
+        const favoriteAthkar = [];
         const morningAthkar = [
             { text: "أصبحنا وأصبح الملك لله، والحمد لله، لا إله إلا الله وحده لا شريك له، له الملك وله الحمد وهو على كل شيء قدير. رب أسألك خير ما في هذا اليوم وخير ما بعده، وأعوذ بك من شر ما في هذا اليوم وشر ما بعده، وأعوذ بك من الكسل وسوء الكبر، وأعوذ بك من عذاب في النار وعذاب في القبر.", repeat: 1 },
             { text: "اللهم بك أصبحنا، وبك أمسينا، وبك نحيا وبك نموت، وإليك النشور.", repeat: 1 },
@@ -158,6 +188,7 @@
         ];
 
         let personalAthkar = [];
+        let challengeProgress = 0;
 
         function renderAthkar(athkarList) {
             const athkarDiv = document.getElementById('athkar');
@@ -167,6 +198,7 @@
                     <div class="progress-circle" data-progress="0" data-repeat="${athkar.repeat}" onclick="updateProgress(this)">
                         <span class="progress-text">0/${athkar.repeat}</span>
                     </div>
+                    <span class="favorite" onclick="addToFavorites('${athkar.text}')">&#9733;</span>
                     <hr>`;
             }).join('');
         }
@@ -200,6 +232,14 @@
                 // تحديث شكل الدائرة بناءً على التقدم
                 const percentage = (progress / repeat) * 100;
                 circle.style.background = `conic-gradient(#4caf50 ${percentage}%, #f0f7fa ${percentage}%)`;
+
+                // تحديث التحدي اليومي
+                challengeProgress++;
+                document.getElementById('challenge-progress').textContent = `${challengeProgress}/10 أذكار مكتملة`;
+                
+                // تحديث النقاط
+                score += 10;
+                document.getElementById('score').textContent = score;
             }
         }
 
@@ -213,6 +253,15 @@
                 personalAthkar.push({ text: newAthkar, repeat: 1 });
                 alert('تم إضافة الذكر الشخصي.');
             }
+        }
+
+        function addToFavorites(text) {
+            favoriteAthkar.push(text);
+            alert('تمت إضافة الذكر إلى المفضلة.');
+        }
+
+        function showFavorites() {
+            renderAthkar(favoriteAthkar.map(text => ({ text, repeat: 1 })));
         }
     </script>
 </body>
