@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>أذكار الصباح والمساء</title>
+    <title>أذكار الصباح والمساء والقرآن الكريم</title>
     <style>
         body {
             font-family: 'Cairo', sans-serif;
@@ -57,33 +57,9 @@
             border-top: 2px solid #00796b;
             margin: 20px 0;
         }
-        .progress-circle {
-            position: relative;
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            border: 5px solid #4caf50;
-            margin: 10px auto;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        .progress-circle .progress-text {
-            position: absolute;
-            font-size: 22px;
-            font-weight: bold;
-            color: #00796b;
-        }
-        .progress-circle[data-progress="1"] {
-            background: conic-gradient(#4caf50 33%, #f0f7fa 33%);
-        }
-        .progress-circle[data-progress="2"] {
-            background: conic-gradient(#4caf50 66%, #f0f7fa 66%);
-        }
-        .progress-circle[data-progress="3"] {
-            background: conic-gradient(#4caf50 100%, #f0f7fa 100%);
+        .quran {
+            margin-top: 30px;
+            text-align: center;
         }
 
         /* شاشة تسجيل الدخول */
@@ -102,13 +78,6 @@
         }
         .dark-mode h1, .dark-mode footer a {
             color: #ffffff;
-        }
-        .dark-mode .progress-circle {
-            border-color: #333333;
-            background: #333333;
-        }
-        .dark-mode .progress-circle .progress-text {
-            color: white;
         }
 
         /* المفضلة */
@@ -160,13 +129,15 @@
     <div class="container" id="main-content" style="display: none;">
         <button class="dark-mode-toggle" onclick="toggleDarkMode()">تبديل الوضع الليلي</button>
 
-        <h1>أذكار الصباح والمساء</h1>
+        <h1>أذكار الصباح والمساء والقرآن الكريم</h1>
         <button onclick="showMorning()">أذكار الصباح</button>
         <button onclick="showEvening()">أذكار المساء</button>
         <button onclick="showRandom()">ذكر عشوائي</button>
         <button onclick="addPersonalAthkar()">إضافة ذكر شخصي</button>
         <button onclick="showFavorites()">عرض المفضلة</button>
+        <button onclick="showQuran()">القرآن الكريم</button>
         <div id="athkar" class="athkar"></div>
+        <div id="quran" class="quran" style="display:none;"></div>
     </div>
 
     <footer>
@@ -310,6 +281,40 @@
                 const percentage = (progress / repeat) * 100;
                 circle.style.background = `conic-gradient(#4caf50 ${percentage}%, #f0f7fa ${percentage}%)`;
             }
+        }
+
+        function showQuran() {
+            const quranDiv = document.getElementById('quran');
+            const surahs = [
+                "الفاتحة", "البقرة", "آل عمران", "النساء", "المائدة", 
+                "الأنعام", "الأعراف", "الأنفال", "التوبة", "يونس", 
+                "هود", "يوسف", "الرعد", "إبراهيم", "الحجر", 
+                "النحل", "الإسراء", "الكهف", "مريم", "طه", 
+                "الأنبياء", "الحج", "المؤمنون", "النور", "الفرقان", 
+                "الشعراء", "النمل", "القصص", "العنكبوت", "الروم", 
+                "لقمان", "السجدة", "الأحزاب", "سبأ", "فاطر", 
+                "يس", "الصافات", "ص", "الزمر", "غافر", 
+                "فصلت", "الشورى", "الزخرف", "الدخان", "الجاثية", 
+                "الأحقاف", "محمد", "الفتح", "الحجرات", "ق", 
+                "الذاريات", "الطور", "النجم", "القمر", "الرحمن", 
+                "الواقعة", "الحديد", "المجادلة", "الحشر", "الممتحنة", 
+                "الصف", "الجمعة", "المنافقون", "التغابن", "الطلاق", 
+                "التحريم", "الملك", "القلم", "الحاقة", "المعارج", 
+                "نوح", "الجن", "المزمل", "المدثر", "القيامة", 
+                "الإنسان", "المرسلات", "النبأ", "النازعات", "عبس", 
+                "التكوير", "الإنفطار", "المطففين", "الإنشقاق", "البروج", 
+                "الطارق", "الأعلى", "الغاشية", "الفجر", "البلد", 
+                "الشمس", "الليل", "الضحى", "الشرح", "التين", 
+                "العلق", "القدر", "البينة", "الزلزلة", "العاديات", 
+                "القارعة", "التكاثر", "العصر", "الهمزة", "الفيل", 
+                "قريش", "الماعون", "الكوثر", "الكافرون", "النصر", 
+                "المسد", "الإخلاص", "الفلق", "الناس"
+            ];
+
+            quranDiv.innerHTML = "<h2>القرآن الكريم</h2>" + surahs.map(surah => `
+                <p>${surah}</p>
+            `).join('');
+            quranDiv.style.display = 'block';
         }
 
         function toggleDarkMode() {
