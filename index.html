@@ -20,18 +20,17 @@
         .container {
             background-color: #ffffff;
             border-radius: 20px;
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
-            margin: 20px auto;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+            margin: 40px auto;
             padding: 30px;
             width: 90%;
-            max-width: 700px;
-            text-align: right;
+            max-width: 400px;
         }
         button {
             font-size: 18px;
             padding: 15px;
             margin: 10px 0;
-            width: 80%;
+            width: 100%;
             border-radius: 10px;
             border: none;
             background-color: #00796b;
@@ -80,6 +79,16 @@
         .progress-circle[data-progress="3"] {
             background: conic-gradient(#4caf50 100%, #f0f7fa 100%);
         }
+        footer {
+            margin-top: 30px;
+            font-size: 16px;
+            color: #00796b;
+        }
+        footer a {
+            color: #00796b;
+            text-decoration: none;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -91,7 +100,12 @@
         <div id="athkar" class="athkar"></div>
     </div>
 
+    <footer>
+        المطور: <a href="https://www.instagram.com/_w0112" target="_blank">@_w0112</a>
+    </footer>
+
     <script>
+        const clickSound = new Audio('https://www.myinstants.com/media/sounds/button-click.mp3'); // رابط صوت النقر
         const morningAthkar = [
             { text: "أصبحنا وأصبح الملك لله، والحمد لله، لا إله إلا الله وحده لا شريك له...", repeat: 1 },
             { text: "اللهم بك أصبحنا وبك أمسينا، وبك نحيا وبك نموت...", repeat: 1 },
@@ -147,6 +161,9 @@
                 progress++;
                 circle.setAttribute('data-progress', progress);
                 circle.querySelector('.progress-text').textContent = `${progress}/${repeat}`;
+                
+                // تشغيل صوت النقر
+                clickSound.play();
                 
                 // تحديث شكل الدائرة بناءً على التقدم
                 const percentage = (progress / repeat) * 100;
