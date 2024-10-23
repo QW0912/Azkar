@@ -43,24 +43,36 @@
             background-color: #004d40;
             transform: scale(1.05);
         }
-        .video-container {
-            margin: 20px 0;
-        }
-        iframe {
-            width: 100%;
-            height: 315px;
-            border-radius: 10px;
-            border: 2px solid #00796b;
-        }
         hr {
             border: none;
             border-top: 2px solid #00796b;
             margin: 20px 0;
         }
+        .dark-mode-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: #00796b;
+            color: white;
+            padding: 10px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .dark-mode-toggle:hover {
+            background-color: #004d40;
+        }
+        iframe {
+            width: 100%;
+            height: 315px;
+            border-radius: 10px;
+            margin-top: 20px;
+            border: 2px solid #00796b;
+        }
     </style>
 </head>
 <body>
-
     <div class="login-screen" id="login-screen">
         <h1>مرحبًا بك في موقع الأذكار</h1>
         <p>أدخل الرقم التسلسلي الخاص بك:</p>
@@ -82,52 +94,32 @@
         <button onclick="showFavorites()">عرض المفضلة</button>
         <button onclick="showVideos()">يوتيوب</button>
         <button class="surah-button" onclick="showQuran()">القرآن الكريم</button>
-        
+
         <div id="athkar" class="athkar"></div>
         <div id="quran" class="quran" style="display:none;"></div>
         <div id="surah-content" class="surah-content" style="display:none;"></div>
         <div class="coming-soon">سوف يتم وضع السور المتبقية قريبًا</div>
 
         <div id="video-list" style="display:none;">
-            <div class="video-container">
-                <iframe src="https://www.youtube.com/embed/X9DYBA-zZ2U" title="الشيخ نبيل العوضي - قصص الأنبياء"></iframe>
-            </div>
+            <iframe src="https://www.youtube.com/embed/5Yf2pH_U9E4" title="الشيخ نبيل العوضي - قصص الأنبياء"></iframe>
             <hr>
-            <div class="video-container">
-                <iframe src="https://www.youtube.com/embed/_7y9zY33FFg" title="الداعية مصطفى حسني - كنوز"></iframe>
-            </div>
+            <iframe src="https://www.youtube.com/embed/kZRmGbk9LfM" title="الداعية مصطفى حسني - كنوز"></iframe>
             <hr>
-            <div class="video-container">
-                <iframe src="https://www.youtube.com/embed/V1Vb2_q65Qw" title="الشيخ عائض القرني - لا تحزن"></iframe>
-            </div>
+            <iframe src="https://www.youtube.com/embed/ISNDD_HpWcc" title="الشيخ عائض القرني - لا تحزن"></iframe>
             <hr>
-            <div class="video-container">
-                <iframe src="https://www.youtube.com/embed/Oj6xj7PRIjg" title="محمد العريفي - العقيدة الإسلامية"></iframe>
-            </div>
+            <iframe src="https://www.youtube.com/embed/ZyPn0qoc6mM" title="محمد العريفي - العقيدة الإسلامية"></iframe>
             <hr>
-            <div class="video-container">
-                <iframe src="https://www.youtube.com/embed/r6ODPD99jew" title="إبراهيم الدويش - يوميات مسلم"></iframe>
-            </div>
+            <iframe src="https://www.youtube.com/embed/IfUJj5EBGpQ" title="إبراهيم الدويش - يوميات مسلم"></iframe>
             <hr>
-            <div class="video-container">
-                <iframe src="https://www.youtube.com/embed/ulcYijHn_yI" title="الشيخ محمود المصري - طريق التوبة"></iframe>
-            </div>
+            <iframe src="https://www.youtube.com/embed/h4Q2snMeNTg" title="الشيخ محمود المصري - طريق التوبة"></iframe>
             <hr>
-            <div class="video-container">
-                <iframe src="https://www.youtube.com/embed/OR3Z9Vap0pY" title="الشيخ عمر عبد الكافي - إعجاز القرآن"></iframe>
-            </div>
+            <iframe src="https://www.youtube.com/embed/sV8OlcfiVdI" title="الشيخ عمر عبد الكافي - إعجاز القرآن"></iframe>
             <hr>
-            <div class="video-container">
-                <iframe src="https://www.youtube.com/embed/tcql7yGYgAE" title="الداعية أحمد الشقيري - خواطر"></iframe>
-            </div>
+            <iframe src="https://www.youtube.com/embed/tcql7yGYgAE" title="الداعية أحمد الشقيري - خواطر"></iframe>
             <hr>
-            <div class="video-container">
-                <iframe src="https://www.youtube.com/embed/E7j-GuQNC0E" title="مشاري الخراز - كيف تتلذذ بالصلاة"></iframe>
-            </div>
+            <iframe src="https://www.youtube.com/embed/E7j-GuQNC0E" title="مشاري الخراز - كيف تتلذذ بالصلاة"></iframe>
             <hr>
-            <div class="video-container">
-                <iframe src="https://www.youtube.com/embed/KUu5zpGrVSg" title="محمد راتب النابلسي - الدرس اليومي"></iframe>
-            </div>
+            <iframe src="https://www.youtube.com/embed/KUu5zpGrVSg" title="محمد راتب النابلسي - الدرس اليومي"></iframe>
         </div>
     </div>
 
@@ -165,23 +157,59 @@
         }
 
         function showMorning() {
-            // عرض أذكار الصباح
+            document.getElementById('athkar').innerHTML = `
+                <h2>أذكار الصباح</h2>
+                <p>بسم الله الذي لا يضر مع اسمه شيء في الأرض ولا في السماء وهو السميع العليم. (ثلاث مرات)</p>
+                <hr>
+                <p>اللهم بك أصبحنا، وبك أمسينا، وبك نحيا، وبك نموت وإليك النشور.</p>
+                <hr>
+                <p>أصبحنا على فطرة الإسلام، وعلى كلمة الإخلاص، وعلى دين نبينا محمد ﷺ، وعلى ملة أبينا إبراهيم، حنيفًا مسلمًا وما كان من المشركين.</p>
+                <hr>`;
         }
 
         function showEvening() {
-            // عرض أذكار المساء
+            document.getElementById('athkar').innerHTML = `
+                <h2>أذكار المساء</h2>
+                <p>أعوذ بكلمات الله التامات من شر ما خلق. (ثلاث مرات)</p>
+                <hr>
+                <p>اللهم إني أسألك العافية في الدنيا والآخرة، اللهم إني أسألك العفو والعافية في ديني ودنياي وأهلي ومالي.</p>
+                <hr>
+                <p>اللهم أنت ربي لا إله إلا أنت، خلقتني وأنا عبدك، وأنا على عهدك ووعدك ما استطعت، أعوذ بك من شر ما صنعت، أبوء لك بنعمتك علي وأبوء بذنبي فاغفر لي، فإنه لا يغفر الذنوب إلا أنت.</p>
+                <hr>`;
         }
 
         function showRandom() {
-            // عرض ذكر عشوائي
+            const adhkar = [
+                'اللهم بك أصبحنا وبك أمسينا وبك نحيا وبك نموت وإليك المصير.',
+                '```
+اللهم بك أصبحنا وبك أمسينا وبك نحيا وبك نموت وإليك المصير.',
+                'اللهم إني أعوذ بك من الهم والحزن، وأعوذ بك من العجز والكسل.',
+                'أستغفر الله العظيم الذي لا إله إلا هو الحي القيوم وأتوب إليه.'
+            ];
+            const randomIndex = Math.floor(Math.random() * adhkar.length);
+            alert(adhkar[randomIndex]);
         }
 
         function addPersonalAthkar() {
-            // إضافة ذكر شخصي
+            const personalAthkar = prompt('أضف ذكرك الشخصي:');
+            const repetition = prompt('كم مرة تريد تكرار الذكر؟');
+            if (personalAthkar && repetition) {
+                localStorage.setItem('personalAthkar', personalAthkar);
+                localStorage.setItem('repetition', repetition);
+                alert('تم حفظ الذكر الشخصي بنجاح');
+            }
         }
 
         function showFavorites() {
-            // عرض الأذكار المحفوظة
+            const personalAthkar = localStorage.getItem('personalAthkar');
+            const repetition = localStorage.getItem('repetition');
+            if (personalAthkar && repetition) {
+                document.getElementById('athkar').innerHTML = `
+                    <h2>الأذكار المحفوظة</h2>
+                    <p>${personalAthkar} ( ${repetition} مرات)</p>`;
+            } else {
+                alert('لا توجد أذكار محفوظة');
+            }
         }
 
         function showQuran() {
