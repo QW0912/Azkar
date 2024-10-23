@@ -67,6 +67,25 @@
             line-height: 2;
         }
 
+        /* زر مشابه لزر أذكار المساء */
+        .surah-button {
+            font-size: 18px;
+            padding: 15px;
+            margin: 10px 0;
+            width: 100%;
+            border-radius: 10px;
+            border: none;
+            background-color: #00796b;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .surah-button:hover {
+            background-color: #004d40;
+            transform: scale(1.05);
+        }
+
         /* شاشة تسجيل الدخول */
         .login-screen {
             text-align: center;
@@ -145,6 +164,13 @@
         .progress-circle[data-progress="3"] {
             background: conic-gradient(#4caf50 100%, #f0f7fa 100%);
         }
+
+        /* الرسالة التنبيهية */
+        .coming-soon {
+            color: #e74c3c;
+            font-size: 16px;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
@@ -169,10 +195,11 @@
         <button onclick="showRandom()">ذكر عشوائي</button>
         <button onclick="addPersonalAthkar()">إضافة ذكر شخصي</button>
         <button onclick="showFavorites()">عرض المفضلة</button>
-        <button onclick="showQuran()">القرآن الكريم</button>
+        <button class="surah-button" onclick="showQuran()">القرآن الكريم</button>
         <div id="athkar" class="athkar"></div>
         <div id="quran" class="quran" style="display:none;"></div>
         <div id="surah-content" class="surah-content" style="display:none;"></div>
+        <div class="coming-soon">سوف يتم وضع السور المتبقية قريبًا</div>
     </div>
 
     <footer>
@@ -219,7 +246,9 @@
         }
 
         function loadFavorites() {
-            const savedFavorites = localStorage.getItem(`favorites_${currentSerial}`);
+            const savedFavorites = localStorage.getItem(`favorites_${
+
+currentSerial}`);
             if (savedFavorites) {
                 favoriteAthkar[currentSerial] = JSON.parse(savedFavorites);
             } else {
@@ -246,9 +275,7 @@
             const athkarDiv = document.getElementById('athkar');
             const favorites = favoriteAthkar[currentSerial] || [];
             athkarDiv.innerHTML = favorites.map(athkar => `
-               
-
- <p>${athkar.text}</p>
+                <p>${athkar.text}</p>
                 <div class="progress-circle" data-repeat="${athkar.repeat}" onclick="updateProgress(this)" data-progress="0">
                     <span class="progress-text">0/${athkar.repeat}</span>
                 </div>
@@ -342,7 +369,7 @@
             ];
 
             quranDiv.innerHTML = "<h2>القرآن الكريم</h2>" + surahs.map(surah => `
-                <p onclick="showSurah('${surah.text}')">${surah.name}</p>
+                <button class="surah-button" onclick="showSurah('${surah.text}')">${surah.name}</button>
             `).join('');
             quranDiv.style.display = 'block';
             document.getElementById('surah-content').style.display = 'none';
@@ -357,6 +384,12 @@
 
         function toggleDarkMode() {
             document.body.classList.toggle('dark-mode');
+        }
+
+        // إضافة مؤثرات صوتية جذابة (ليس موسيقى)
+        function playSound() {
+            var audio = new Audio('click-sound.mp3'); // يجب عليك تحميل ملف الصوت "click-sound.mp3" إلى مجلد المشروع
+            audio.play();
         }
     </script>
 </body>
