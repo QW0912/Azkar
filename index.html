@@ -52,21 +52,33 @@
         .athkar p {
             margin-bottom: 20px;
         }
-        .circle {
-            display: inline-block;
-            width: 50px;
-            height: 50px;
+        .progress-circle {
+            position: relative;
+            width: 80px;
+            height: 80px;
             border-radius: 50%;
-            background-color: #4caf50;
-            color: white;
-            line-height: 50px;
-            text-align: center;
-            font-size: 18px;
-            margin: 5px;
+            border: 5px solid #4caf50;
+            margin: 10px auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             cursor: pointer;
+            transition: all 0.3s ease;
         }
-        .circle.completed {
-            background-color: #757575;
+        .progress-circle .progress-text {
+            position: absolute;
+            font-size: 22px;
+            font-weight: bold;
+            color: #00796b;
+        }
+        .progress-circle[data-progress="1"] {
+            background: conic-gradient(#4caf50 33%, #f0f7fa 33%);
+        }
+        .progress-circle[data-progress="2"] {
+            background: conic-gradient(#4caf50 66%, #f0f7fa 66%);
+        }
+        .progress-circle[data-progress="3"] {
+            background: conic-gradient(#4caf50 100%, #f0f7fa 100%);
         }
     </style>
 </head>
@@ -105,11 +117,11 @@
         function renderAthkar(athkarList) {
             const athkarDiv = document.getElementById('athkar');
             athkarDiv.innerHTML = athkarList.map((athkar, index) => {
-                let circles = '';
-                for (let i = 0; i < athkar.repeat; i++) {
-                    circles += `<span class="circle" onclick="completeCircle(this)">${i + 1}</span>`;
-                }
-                return `<p>${athkar.text}</p>${circles}`;
+                return `
+                    <p>${athkar.text}</p>
+                    <div class="progress-circle" data-progress="0" data-repeat="${athkar.repeat}" onclick="updateProgress(this)">
+                        <span class="progress-text">0/${athkar.repeat}</span>
+                    </div>`;
             }).join('');
         }
 
@@ -127,8 +139,19 @@
             renderAthkar([allAthkar[randomIndex]]);
         }
 
-        function completeCircle(circle) {
-            circle.classList.add('completed');
+        function updateProgress(circle) {
+            let progress = parseInt(circle.getAttribute('data-progress'));
+            const repeat = parseInt(circle.getAttribute('data-repeat'));
+
+            if (progress < repeat) {
+                progress++;
+                circle.setAttribute('data-progress', progress);
+                circle.querySelector('.progress-text').textContent = `${progress}/${repeat}`;
+                
+                // تحديث شكل الدائرة بناءً على التقدم
+                const percentage = (progress / repeat) * 100;
+                circle.style.background = `conic-gradient(#4caf50 ${percentage}%, #f0f7fa ${percentage}%)`;
+            }
         }
     </script>
 </body>
