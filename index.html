@@ -7,65 +7,80 @@
     <style>
         body {
             font-family: 'Cairo', sans-serif;
-            background-color: #e0f7fa;
+            background-color: #f9f9f9;
+            color: #333;
             text-align: center;
             direction: rtl;
             margin: 0;
             padding: 0;
             transition: background-color 0.3s, color 0.3s;
         }
+
         h1 {
-            color: #00796b;
-            margin-top: 30px;
+            color: #2c3e50;
+            margin-top: 20px;
+            font-size: 36px;
         }
+
         .container {
             background-color: #ffffff;
             border-radius: 20px;
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
             margin: 40px auto;
-            padding: 30px;
+            padding: 40px;
             width: 90%;
-            max-width: 400px;
+            max-width: 600px;
         }
+
         button {
             font-size: 18px;
             padding: 15px;
             margin: 10px 0;
             width: 100%;
-            border-radius: 10px;
+            border-radius: 12px;
             border: none;
-            background-color: #00796b;
+            background-color: #2980b9;
             color: white;
             cursor: pointer;
             transition: all 0.3s ease;
         }
+
         button:hover {
-            background-color: #004d40;
+            background-color: #3498db;
             transform: scale(1.05);
         }
+
         .athkar {
             font-size: 20px;
             color: #37474f;
             margin-top: 20px;
             line-height: 1.8;
         }
+
         .athkar p {
             margin-bottom: 20px;
         }
+
         hr {
             border: none;
-            border-top: 2px solid #00796b;
+            border-top: 2px solid #2980b9;
             margin: 20px 0;
         }
+
         .quran {
             margin-top: 30px;
             text-align: center;
         }
+
         .surah-content {
             text-align: justify;
             font-size: 18px;
             line-height: 2;
             padding: 15px;
+            background-color: #f4f4f4;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
         }
 
         /* شاشة تسجيل الدخول */
@@ -75,15 +90,22 @@
 
         /* Dark Mode */
         .dark-mode {
-            background-color: #000000;
-            color: #ffffff;
+            background-color: #222;
+            color: #fff;
         }
+
         .dark-mode button {
-            background-color: #333333;
+            background-color: #333;
             color: white;
         }
+
         .dark-mode h1, .dark-mode footer a {
-            color: #ffffff;
+            color: #fff;
+        }
+
+        .dark-mode .surah-content {
+            background-color: #333;
+            color: white;
         }
 
         /* المفضلة */
@@ -98,7 +120,7 @@
             position: absolute;
             top: 20px;
             right: 20px;
-            background-color: #00796b;
+            background-color: #2980b9;
             color: white;
             padding: 10px;
             border-radius: 10px;
@@ -106,46 +128,23 @@
             cursor: pointer;
             transition: background-color 0.3s ease;
         }
+
         .dark-mode-toggle:hover {
-            background-color: #004d40;
+            background-color: #3498db;
         }
 
-        /* السهم */
         .arrow {
             display: inline-block;
             margin-top: 10px;
             font-size: 20px;
-            color: #00796b;
+            color: #2980b9;
         }
 
-        /* الدائرة */
-        .progress-circle {
-            position: relative;
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            border: 5px solid #4caf50;
-            margin: 10px auto;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        .progress-circle .progress-text {
-            position: absolute;
-            font-size: 22px;
-            font-weight: bold;
-            color: #00796b;
-        }
-        .progress-circle[data-progress="1"] {
-            background: conic-gradient(#4caf50 33%, #f0f7fa 33%);
-        }
-        .progress-circle[data-progress="2"] {
-            background: conic-gradient(#4caf50 66%, #f0f7fa 66%);
-        }
-        .progress-circle[data-progress="3"] {
-            background: conic-gradient(#4caf50 100%, #f0f7fa 100%);
+        /* رسالة السور المتبقية */
+        .coming-soon {
+            font-size: 16px;
+            color: #e74c3c;
+            margin-top: 20px;
         }
     </style>
 </head>
@@ -175,6 +174,7 @@
         <div id="athkar" class="athkar"></div>
         <div id="quran" class="quran" style="display:none;"></div>
         <div id="surah-content" class="surah-content" style="display:none;"></div>
+        <div class="coming-soon">سوف يتم وضع السور المتبقية قريبًا</div>
     </div>
 
     <footer>
@@ -250,7 +250,9 @@
             athkarDiv.innerHTML = favorites.map(athkar => `
                 <p>${athkar.text}</p>
                 <div class="progress-circle" data-repeat="${athkar.repeat}" onclick="updateProgress(this)" data-progress="0">
-                    <span class="progress-text">0/${athkar.repeat}</span>
+                   
+
+ <span class="progress-text">0/${athkar.repeat}</span>
                 </div>
                 <hr>
             `).join('');
@@ -323,22 +325,22 @@
         function showQuran() {
             const quranDiv = document.getElementById('quran');
             const surahs = [
-                { name: "الفاتحة", text: `بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ 
-                الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ ﴿٢﴾ 
-                الرَّحْمَنِ الرَّحِيمِ ﴿٣﴾ 
-                مَالِكِ يَوْمِ الدِّينِ ﴿٤﴾ 
-                إِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ ﴿٥﴾ 
-                اهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ ﴿٦﴾ 
+                { name: "الفاتحة", text: `بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ
+                الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ ﴿٢﴾
+                الرَّحْمَنِ الرَّحِيمِ ﴿٣﴾
+                مَالِكِ يَوْمِ الدِّينِ ﴿٤﴾
+                إِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ ﴿٥﴾
+                اهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ ﴿٦﴾
                 صِرَاطَ الَّذِينَ أَنْعَمْتَ عَلَيْهِمْ غَيْرِ الْمَغْضُوبِ عَلَيْهِمْ وَلَا الضَّالِّينَ ﴿٧﴾` },
-                
-                { name: "البقرة", text: `الم ﴿١﴾ 
-                ذَٰلِكَ الْكِتَابُ لَا رَيْبَ ۛ فِيهِ ۛ هُدًى لِّلْمُتَّقِينَ ﴿٢﴾ 
-                الَّذِينَ يُؤْمِنُونَ بِالْغَيْبِ وَيُقِيمُونَ الصَّلَاةَ وَمِمَّا رَزَقْنَاهُمْ يُنفِقُونَ ﴿٣﴾ 
-                وَالَّذِينَ يُؤْمِنُونَ بِمَا أُنزِلَ إِلَيْكَ وَمَا أُنزِلَ مِن قَبْلِكَ وَبِالْآخِرَةِ هُمْ يُوقِنُونَ ﴿٤﴾ ...` },
 
-                { name: "آل عمران", text: `الم ﴿١﴾ 
-                اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ ﴿٢﴾ 
-                نَزَّلَ عَلَيْكَ الْكِتَابَ بِالْحَقِّ مُصَدِّقًا لِّمَا بَيْنَ يَدَيْهِ وَأَنزَلَ التَّوْرَاةَ وَالْإِنجِيلَ ﴿٣﴾ ...` }
+                { name: "البقرة", text: `الم ﴿١﴾
+                ذَٰلِكَ الْكِتَابُ لَا رَيْبَ ۛ فِيهِ ۛ هُدًى لِلْمُتَّقِينَ ﴿٢﴾
+                الَّذِينَ يُؤْمِنُونَ بِالْغَيْبِ وَيُقِيمُونَ الصَّلَاةَ وَمِمَّا رَزَقْنَاهُمْ يُنفِقُونَ ﴿٣﴾
+                وَالَّذِينَ يُؤْمِنُونَ بِمَا أُنزِلَ إِلَيْكَ وَمَا أُنزِلَ مِن قَبْلِكَ وَبِالْآخِرَةِ هُمْ يُوقِنُونَ ﴿٤﴾...` },
+
+                { name: "آل عمران", text: `الم ﴿١﴾
+                اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ ﴿٢﴾
+                نَزَّلَ عَلَيْكَ الْكِتَابَ بِالْحَقِّ مُصَدِّقًا لِّمَا بَيْنَ يَدَيْهِ وَأَنزَلَ التَّوْرَاةَ وَالْإِنجِيلَ ﴿٣﴾...` }
             ];
 
             quranDiv.innerHTML = "<h2>القرآن الكريم</h2>" + surahs.map(surah => `
