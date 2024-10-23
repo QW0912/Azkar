@@ -1,4 +1,125 @@
-<!DOCTYPE html>
+<!<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>أذكار الصباح والمساء والقرآن الكريم</title>
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: #f0f7fa;
+            text-align: center;
+            direction: rtl;
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        h1 {
+            color: #00796b;
+            margin-top: 30px;
+        }
+        .container {
+            background-color: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+            margin: 40px auto;
+            padding: 30px;
+            width: 90%;
+            max-width: 600px;
+        }
+        button {
+            font-size: 18px;
+            padding: 15px;
+            margin: 10px 0;
+            width: 100%;
+            border-radius: 10px;
+            border: none;
+            background-color: #00796b;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        button:hover {
+            background-color: #004d40;
+            transform: scale(1.05);
+        }
+        .video-container {
+            margin: 20px 0;
+        }
+        iframe {
+            width: 100%;
+            height: 315px;
+            border-radius: 10px;
+            border: 2px solid #00796b;
+        }
+        hr {
+            border: none;
+            border-top: 2px solid #00796b;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>أفضل مقاطع دينية</h1>
+    
+    <div class="container">
+        <button onclick="showVideos()">يوتيوب</button>
+        <div id="video-list" style="display:none;">
+            <div class="video-container">
+                <iframe src="https://www.youtube.com/embed/X9DYBA-zZ2U" title="الشيخ نبيل العوضي - قصص الأنبياء"></iframe>
+            </div>
+            <hr>
+            <div class="video-container">
+                <iframe src="https://www.youtube.com/embed/_7y9zY33FFg" title="الداعية مصطفى حسني - كنوز"></iframe>
+            </div>
+            <hr>
+            <div class="video-container">
+                <iframe src="https://www.youtube.com/embed/V1Vb2_q65Qw" title="الشيخ عائض القرني - لا تحزن"></iframe>
+            </div>
+            <hr>
+            <div class="video-container">
+                <iframe src="https://www.youtube.com/embed/Oj6xj7PRIjg" title="محمد العريفي - العقيدة الإسلامية"></iframe>
+            </div>
+            <hr>
+            <div class="video-container">
+                <iframe src="https://www.youtube.com/embed/r6ODPD99jew" title="إبراهيم الدويش - يوميات مسلم"></iframe>
+            </div>
+            <hr>
+            <div class="video-container">
+                <iframe src="https://www.youtube.com/embed/ulcYijHn_yI" title="الشيخ محمود المصري - طريق التوبة"></iframe>
+            </div>
+            <hr>
+            <div class="video-container">
+                <iframe src="https://www.youtube.com/embed/OR3Z9Vap0pY" title="الشيخ عمر عبد الكافي - إعجاز القرآن"></iframe>
+            </div>
+            <hr>
+            <div class="video-container">
+                <iframe src="https://www.youtube.com/embed/tcql7yGYgAE" title="الداعية أحمد الشقيري - خواطر"></iframe>
+            </div>
+            <hr>
+            <div class="video-container">
+                <iframe src="https://www.youtube.com/embed/E7j-GuQNC0E" title="مشاري الخراز - كيف تتلذذ بالصلاة"></iframe>
+            </div>
+            <hr>
+            <div class="video-container">
+                <iframe src="https://www.youtube.com/embed/KUu5zpGrVSg" title="محمد راتب النابلسي - الدرس اليومي"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showVideos() {
+            const videoList = document.getElementById('video-list');
+            if (videoList.style.display === 'none') {
+                videoList.style.display = 'block';
+            } else {
+                videoList.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html> html>
 <html lang="ar">
 <head>
     <meta charset="UTF-8">
