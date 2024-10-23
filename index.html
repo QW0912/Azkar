@@ -61,6 +61,11 @@
             margin-top: 30px;
             text-align: center;
         }
+        .surah-content {
+            text-align: justify;
+            font-size: 18px;
+            line-height: 2;
+        }
 
         /* شاشة تسجيل الدخول */
         .login-screen {
@@ -111,6 +116,36 @@
             font-size: 20px;
             color: #00796b;
         }
+
+        /* الدائرة */
+        .progress-circle {
+            position: relative;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 5px solid #4caf50;
+            margin: 10px auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .progress-circle .progress-text {
+            position: absolute;
+            font-size: 22px;
+            font-weight: bold;
+            color: #00796b;
+        }
+        .progress-circle[data-progress="1"] {
+            background: conic-gradient(#4caf50 33%, #f0f7fa 33%);
+        }
+        .progress-circle[data-progress="2"] {
+            background: conic-gradient(#4caf50 66%, #f0f7fa 66%);
+        }
+        .progress-circle[data-progress="3"] {
+            background: conic-gradient(#4caf50 100%, #f0f7fa 100%);
+        }
     </style>
 </head>
 <body>
@@ -138,6 +173,7 @@
         <button onclick="showQuran()">القرآن الكريم</button>
         <div id="athkar" class="athkar"></div>
         <div id="quran" class="quran" style="display:none;"></div>
+        <div id="surah-content" class="surah-content" style="display:none;"></div>
     </div>
 
     <footer>
@@ -211,7 +247,9 @@
             const athkarDiv = document.getElementById('athkar');
             const favorites = favoriteAthkar[currentSerial] || [];
             athkarDiv.innerHTML = favorites.map(athkar => `
-                <p>${athkar.text}</p>
+                <p
+
+>${athkar.text}</p>
                 <div class="progress-circle" data-repeat="${athkar.repeat}" onclick="updateProgress(this)" data-progress="0">
                     <span class="progress-text">0/${athkar.repeat}</span>
                 </div>
@@ -286,35 +324,24 @@
         function showQuran() {
             const quranDiv = document.getElementById('quran');
             const surahs = [
-                "الفاتحة", "البقرة", "آل عمران", "النساء", "المائدة", 
-                "الأنعام", "الأعراف", "الأنفال", "التوبة", "يونس", 
-                "هود", "يوسف", "الرعد", "إبراهيم", "الحجر", 
-                "النحل", "الإسراء", "الكهف", "مريم", "طه", 
-                "الأنبياء", "الحج", "المؤمنون", "النور", "الفرقان", 
-                "الشعراء", "النمل", "القصص", "العنكبوت", "الروم", 
-                "لقمان", "السجدة", "الأحزاب", "سبأ", "فاطر", 
-                "يس", "الصافات", "ص", "الزمر", "غافر", 
-                "فصلت", "الشورى", "الزخرف", "الدخان", "الجاثية", 
-                "الأحقاف", "محمد", "الفتح", "الحجرات", "ق", 
-                "الذاريات", "الطور", "النجم", "القمر", "الرحمن", 
-                "الواقعة", "الحديد", "المجادلة", "الحشر", "الممتحنة", 
-                "الصف", "الجمعة", "المنافقون", "التغابن", "الطلاق", 
-                "التحريم", "الملك", "القلم", "الحاقة", "المعارج", 
-                "نوح", "الجن", "المزمل", "المدثر", "القيامة", 
-                "الإنسان", "المرسلات", "النبأ", "النازعات", "عبس", 
-                "التكوير", "الإنفطار", "المطففين", "الإنشقاق", "البروج", 
-                "الطارق", "الأعلى", "الغاشية", "الفجر", "البلد", 
-                "الشمس", "الليل", "الضحى", "الشرح", "التين", 
-                "العلق", "القدر", "البينة", "الزلزلة", "العاديات", 
-                "القارعة", "التكاثر", "العصر", "الهمزة", "الفيل", 
-                "قريش", "الماعون", "الكوثر", "الكافرون", "النصر", 
-                "المسد", "الإخلاص", "الفلق", "الناس"
+                { name: "الفاتحة", text: "بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ\nالْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ..." },
+                { name: "البقرة", text: "الم * ذَٰلِكَ الْكِتَابُ لَا رَيْبَ ۛ فِيهِ هُدًى لِّلْمُتَّقِينَ..." },
+                { name: "آل عمران", text: "الم * اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ..." }
+                // باقي السور
             ];
 
             quranDiv.innerHTML = "<h2>القرآن الكريم</h2>" + surahs.map(surah => `
-                <p>${surah}</p>
+                <p onclick="showSurah('${surah.text}')">${surah.name}</p>
             `).join('');
             quranDiv.style.display = 'block';
+            document.getElementById('surah-content').style.display = 'none';
+        }
+
+        function showSurah(surahText) {
+            const surahDiv = document.getElementById('surah-content');
+            surahDiv.innerHTML = `<h2>نص السورة</h2><p>${surahText.replace(/\n/g, "<br>")}</p>`;
+            surahDiv.style.display = 'block';
+            document.getElementById('quran').style.display = 'none';
         }
 
         function toggleDarkMode() {
