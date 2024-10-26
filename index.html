@@ -96,6 +96,11 @@
             z-index: 1000;
             border-radius: 0;
         }
+        .footer {
+            margin-top: 30px;
+            font-size: 14px;
+            color: #555;
+        }
     </style>
 </head>
 <body>
@@ -109,6 +114,7 @@
     </div>
 
     <div id="main-content" class="container" style="display: none;">
+        <button onclick="toggleDarkMode()">تبديل الوضع الليلي</button>
         <button onclick="showMorning()">أذكار الصباح</button>
         <button onclick="showEvening()">أذكار المساء</button>
         <button onclick="showRandom()">ذكر عشوائي</button>
@@ -122,16 +128,17 @@
         <iframe src="https://www.youtube.com/embed/5wXhtzqrmW0" title="ماذا لو الرسول بيننا؟" allowfullscreen></iframe>
         <iframe src="https://www.youtube.com/embed/lTg-fAJpMSE" title="الإيمان بالقضاء والقدر" allowfullscreen></iframe>
         <iframe src="https://www.youtube.com/embed/63_AOCldyXo" title="تذوق العبادات" allowfullscreen></iframe>
-        <iframe src="https://www.youtube.com/embed/tcql7yGYgAE" title="الداعية أحمد الشقيري - خواطر" allowfullscreen></iframe>
     </div>
+
+    <div class="footer">المطور: <a href="https://www.instagram.com/_w0112" target="_blank">@_w0112</a></div>
 
     <script>
         let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
         let currentSerial = '';
 
-        function toggleDarkMode(enable) {
-            document.body.classList.toggle('dark-mode', enable);
-            document.querySelectorAll('.container').forEach(container => container.classList.toggle('dark-mode', enable));
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            document.querySelectorAll('.container').forEach(container => container.classList.toggle('dark-mode'));
         }
 
         function login() {
@@ -195,6 +202,8 @@
         function showEvening() {
             const eveningAthkar = [
                 { text: "أعوذ بكلمات الله التامات من شر ما خلق.", repeat: 3 },
+
+
                 { text: "اللهم إني أمسيت أشهدك وأشهد حملة عرشك وملائكتك وجميع خلقك أنك أنت الله لا إله إلا أنت وحدك لا شريك لك وأن محمدا عبدك ورسولك.", repeat: 4 },
                 { text: "اللهم بك أمسينا، وبك أصبحنا، وبك نحيا، وبك نموت وإليك المصير.", repeat: 1 },
                 { text: "أمسينا وأمسى الملك لله، والحمد لله، لا إله إلا الله وحده لا شريك له، له الملك وله الحمد وهو على كل شيء قدير.", repeat: 1 },
@@ -235,15 +244,12 @@
 
         function showVideos() {
             const videoList = document.getElementById('video-list');
-            const isDarkMode = videoList.style.display === 'none';
-            toggleDarkMode(isDarkMode);
-            videoList.style.display = isDarkMode ? 'grid' : 'none';
+            videoList.style.display = videoList.style.display === 'none' ? 'grid' : 'none';
         }
 
         document.addEventListener('click', (e) => {
             if (e.target.tagName === 'IFRAME') {
                 e.target.classList.toggle('fullscreen');
-                toggleDarkMode(e.target.classList.contains('fullscreen'));
             }
         });
     </script>
