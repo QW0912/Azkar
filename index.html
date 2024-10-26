@@ -59,6 +59,13 @@
             cursor: pointer;
             user-select: none;
         }
+        .favorite {
+            display: inline-block;
+            font-size: 20px;
+            color: #ffdd57;
+            cursor: pointer;
+            margin-left: 10px;
+        }
         .video-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -71,18 +78,38 @@
             border-radius: 10px;
             border: 2px solid #00796b;
         }
+        .search-bar {
+            margin: 20px 0;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            width: 80%;
+            max-width: 400px;
+            border: 2px solid #00796b;
+        }
     </style>
 </head>
 <body>
-    <div class="container">
+    <div id="login-screen" class="container">
+        <h1>مرحبًا بك في موقع الأذكار</h1>
+        <p>أدخل الرقم التسلسلي الخاص بك:</p>
+        <input type="text" id="serial-input" placeholder="الرقم التسلسلي المكون من 20 رقمًا" maxlength="20">
+        <br>
+        <button onclick="login()">الدخول</button>
+        <button onclick="generateSerial()">الحصول على رقم تسلسلي جديد</button>
+    </div>
+
+    <div id="main-content" class="container" style="display: none;">
         <button onclick="showMorning()">أذكار الصباح</button>
         <button onclick="showEvening()">أذكار المساء</button>
         <button onclick="showRandom()">ذكر عشوائي</button>
+        <button onclick="showFavorites()">عرض المفضلة</button>
         <button onclick="showVideos()">يوتيوب</button>
     </div>
 
     <div id="athkar" class="container"></div>
     <div id="video-list" class="video-grid" style="display: none;">
+        <!-- تأكد من أن الروابط إلى الفيديوهات تعمل -->
         <iframe src="https://www.youtube.com/embed/5Yf2pH_U9E4" title="الشيخ نبيل العوضي - قصص الأنبياء"></iframe>
         <iframe src="https://www.youtube.com/embed/kZRmGbk9LfM" title="الداعية مصطفى حسني - كنوز"></iframe>
         <iframe src="https://www.youtube.com/embed/ISNDD_HpWcc" title="الشيخ عائض القرني - لا تحزن"></iframe>
@@ -96,14 +123,39 @@
     </div>
 
     <script>
+        let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+        let currentSerial = '';
+
+        function login() {
+            const serial = document.getElementById('serial-input').value;
+            if (serial.length === 20) {
+                currentSerial = serial;
+                localStorage.setItem('userSerial', serial);
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('main-content').style.display = 'block';
+            } else {
+                alert('الرجاء إدخال رقم تسلسلي مكون من 20 رقمًا.');
+            }
+        }
+
+        function generateSerial() {
+            const serial = 'xxxxxxxxxxxxxxxxxxxx'.replace(/[x]/g, () => (Math.random() * 9 | 0).toString());
+            currentSerial = serial;
+            localStorage.setItem('userSerial', serial);
+            alert(`رقمك التسلسلي: ${serial}\nصور الشاشة، لكي لا تنسى الرقم التسلسلي الخاص بك!`);
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('main-content').style.display = 'block';
+        }
+
         function createAthkar(athkarArray) {
             const athkarDiv = document.getElementById('athkar');
             athkarDiv.innerHTML = '';
-            athkarArray.forEach(athkar => {
+            athkarArray.forEach((athkar, index) => {
                 const athkarElement = document.createElement('div');
                 athkarElement.innerHTML = `
                     <p>${athkar.text}</p>
                     <div class="counter" onclick="decrementCounter(this, ${athkar.repeat})">${athkar.repeat}</div>
+                    <span class="favorite" onclick="addToFavorites('${athkar.text}')">⭐</span>
                 `;
                 athkarDiv.appendChild(athkarElement);
                 athkarDiv.appendChild(document.createElement('hr'));
@@ -127,11 +179,11 @@
                 { text: "أصبحنا على فطرة الإسلام، وعلى كلمة الإخلاص، وعلى دين نبينا محمد ﷺ، وعلى ملة أبينا إبراهيم.", repeat: 1 },
                 { text: "اللهم إني أصبحت أشهدك وأشهد حملة عرشك وملائكتك وجميع خلقك أنك أنت الله لا إله إلا أنت وحدك لا شريك لك وأن محمدا عبدك ورسولك.", repeat: 4 },
                 { text: "رضيت بالله ربا، وبالإسلام دينا، وبمحمد صلى الله عليه وسلم نبيا.", repeat: 3 },
-                { text: "اللهم عافني في بدني، اللهم عافني في سمعي، اللهم عافني في بصري، لا إله إلا أنت.", repeat: 3 },
-                { text: "اللهم إني أعوذ بك من الكفر والفقر، وأعوذ بك من عذاب القبر، لا إله إلا أنت.", repeat: 3 },
-                { text: "أستغفر الله وأتوب إليه.", repeat: 100 },
+                { text: "اللهم عافني في بدني، اللهم عافني في سمعي، اللهم عافني في بصري، لا إله إلا أنت.", repeat: 3 }
             ];
-            createAthkar(morningAthkar);
+           
+
+ createAthkar(morningAthkar);
         }
 
         function showEvening() {
@@ -140,12 +192,22 @@
                 { text: "اللهم إني أمسيت أشهدك وأشهد حملة عرشك وملائكتك وجميع خلقك أنك أنت الله لا إله إلا أنت وحدك لا شريك لك وأن محمدا عبدك ورسولك.", repeat: 4 },
                 { text: "اللهم بك أمسينا، وبك أصبحنا، وبك نحيا، وبك نموت وإليك المصير.", repeat: 1 },
                 { text: "أمسينا وأمسى الملك لله، والحمد لله، لا إله إلا الله وحده لا شريك له، له الملك وله الحمد وهو على كل شيء قدير.", repeat: 1 },
-                { text: "اللهم إني أسألك العافية في الدنيا والآخرة، اللهم إني أسألك العفو والعافية في ديني ودنياي وأهلي ومالي.", repeat: 1 },
-                { text: "يا حي يا قيوم برحمتك أستغيث، أصلح لي شأني كله ولا تكلني إلى نفسي طرفة عين.", repeat: 1 },
-                { text: "أعوذ بكلمات الله التامات من غضبه وعقابه وشر عباده ومن همزات الشياطين وأن يحضرون.", repeat: 1 },
-                { text: "سبحان الله وبحمده عدد خلقه ورضا نفسه وزنة عرشه ومداد كلماته.", repeat: 3 },
+                { text: "اللهم إني أسألك العافية في الدنيا والآخرة، اللهم إني أسألك العفو والعافية في ديني ودنياي وأهلي ومالي.", repeat: 1 }
             ];
             createAthkar(eveningAthkar);
+        }
+
+        function addToFavorites(athkarText) {
+            if (!favorites.includes(athkarText)) {
+                favorites.push(athkarText);
+                localStorage.setItem('favorites', JSON.stringify(favorites));
+                alert('تمت إضافة الذكر إلى المفضلة');
+            }
+        }
+
+        function showFavorites() {
+            const favoriteAthkar = favorites.map(text => ({ text, repeat: 1 }));
+            createAthkar(favoriteAthkar);
         }
 
         function showRandom() {
