@@ -66,26 +66,19 @@
             cursor: pointer;
             margin-left: 10px;
         }
-        .video-grid {
+        .video-list {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 15px;
             margin-top: 20px;
         }
-        iframe {
-            width: 100%;
-            height: 200px;
-            border-radius: 10px;
-            border: 2px solid #00796b;
-        }
-        .search-bar {
-            margin: 20px 0;
-            padding: 10px;
+        .video-list button {
             font-size: 16px;
-            border-radius: 5px;
-            width: 80%;
-            max-width: 400px;
-            border: 2px solid #00796b;
+            padding: 10px;
+            border-radius: 10px;
+            background-color: #0288d1;
+            color: white;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -108,18 +101,17 @@
     </div>
 
     <div id="athkar" class="container"></div>
-    <div id="video-list" class="video-grid" style="display: none;">
-        <!-- تأكد من أن الروابط إلى الفيديوهات محدثة وتعمل -->
-        <iframe src="https://www.youtube.com/embed/kZRmGbk9LfM" title="الداعية مصطفى حسني - كنوز"></iframe>
-        <iframe src="https://www.youtube.com/embed/5Yf2pH_U9E4" title="الشيخ نبيل العوضي - قصص الأنبياء"></iframe>
-        <iframe src="https://www.youtube.com/embed/ISNDD_HpWcc" title="الشيخ عائض القرني - لا تحزن"></iframe>
-        <iframe src="https://www.youtube.com/embed/ZyPn0qoc6mM" title="محمد العريفي - العقيدة الإسلامية"></iframe>
-        <iframe src="https://www.youtube.com/embed/tcql7yGYgAE" title="الداعية أحمد الشقيري - خواطر"></iframe>
-        <iframe src="https://www.youtube.com/embed/E7j-GuQNC0E" title="مشاري الخراز - كيف تتلذذ بالصلاة"></iframe>
-        <iframe src="https://www.youtube.com/embed/sV8OlcfiVdI" title="الشيخ عمر عبد الكافي - إعجاز القرآن"></iframe>
-        <iframe src="https://www.youtube.com/embed/KUu5zpGrVSg" title="محمد راتب النابلسي - الدرس اليومي"></iframe>
-        <iframe src="https://www.youtube.com/embed/h4Q2snMeNTg" title="الشيخ محمود المصري - طريق التوبة"></iframe>
-        <iframe src="https://www.youtube.com/embed/IfUJj5EBGpQ" title="إبراهيم الدويش - يوميات مسلم"></iframe>
+    <div id="video-list" class="video-list" style="display: none;">
+        <button onclick="openVideo('https://www.youtube.com/watch?v=5Yf2pH_U9E4')">الشيخ نبيل العوضي - قصص الأنبياء</button>
+        <button onclick="openVideo('https://www.youtube.com/watch?v=kZRmGbk9LfM')">الداعية مصطفى حسني - كنوز</button>
+        <button onclick="openVideo('https://www.youtube.com/watch?v=ISNDD_HpWcc')">الشيخ عائض القرني - لا تحزن</button>
+        <button onclick="openVideo('https://www.youtube.com/watch?v=ZyPn0qoc6mM')">محمد العريفي - العقيدة الإسلامية</button>
+        <button onclick="openVideo('https://www.youtube.com/watch?v=IfUJj5EBGpQ')">إبراهيم الدويش - يوميات مسلم</button>
+        <button onclick="openVideo('https://www.youtube.com/watch?v=h4Q2snMeNTg')">الشيخ محمود المصري - طريق التوبة</button>
+        <button onclick="openVideo('https://www.youtube.com/watch?v=sV8OlcfiVdI')">الشيخ عمر عبد الكافي - إعجاز القرآن</button>
+        <button onclick="openVideo('https://www.youtube.com/watch?v=tcql7yGYgAE')">الداعية أحمد الشقيري - خواطر</button>
+        <button onclick="openVideo('https://www.youtube.com/watch?v=E7j-GuQNC0E')">مشاري الخراز - كيف تتلذذ بالصلاة</button>
+        <button onclick="openVideo('https://www.youtube.com/watch?v=KUu5zpGrVSg')">محمد راتب النابلسي - الدرس اليومي</button>
     </div>
 
     <script>
@@ -228,6 +220,10 @@
         function showVideos() {
             const videoList = document.getElementById('video-list');
             videoList.style.display = videoList.style.display === 'none' ? 'grid' : 'none';
+        }
+
+        function openVideo(url) {
+            window.open(url, '_blank');
         }
     </script>
 </body>
