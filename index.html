@@ -31,6 +31,7 @@
             width: 90%;
             max-width: 600px;
             transition: background-color 0.3s, color 0.3s;
+            position: relative;
         }
         .container.dark-mode {
             background-color: #333;
@@ -51,6 +52,20 @@
         button:hover {
             background-color: #004d40;
             transform: scale(1.05);
+        }
+        .dark-mode-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 8px 12px;
+            font-size: 14px;
+            border-radius: 8px;
+            background-color: #555;
+            color: #fff;
+            cursor: pointer;
+        }
+        .dark-mode-btn:hover {
+            background-color: #333;
         }
         hr {
             border: none;
@@ -97,7 +112,7 @@
             border-radius: 0;
         }
         .footer {
-            margin-top: 30px;
+            margin-top: 20px;
             font-size: 14px;
             color: #555;
         }
@@ -111,10 +126,11 @@
         <br>
         <button onclick="login()">الدخول</button>
         <button onclick="generateSerial()">الحصول على رقم تسلسلي جديد</button>
+        <div class="footer">المطور: <a href="https://www.instagram.com/_w0112" target="_blank">@_w0112</a></div>
     </div>
 
     <div id="main-content" class="container" style="display: none;">
-        <button onclick="toggleDarkMode()">تبديل الوضع الليلي</button>
+        <button class="dark-mode-btn" onclick="toggleDarkMode()">تبديل الوضع الليلي</button>
         <button onclick="showMorning()">أذكار الصباح</button>
         <button onclick="showEvening()">أذكار المساء</button>
         <button onclick="showRandom()">ذكر عشوائي</button>
@@ -129,8 +145,6 @@
         <iframe src="https://www.youtube.com/embed/lTg-fAJpMSE" title="الإيمان بالقضاء والقدر" allowfullscreen></iframe>
         <iframe src="https://www.youtube.com/embed/63_AOCldyXo" title="تذوق العبادات" allowfullscreen></iframe>
     </div>
-
-    <div class="footer">المطور: <a href="https://www.instagram.com/_w0112" target="_blank">@_w0112</a></div>
 
     <script>
         let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
@@ -202,8 +216,6 @@
         function showEvening() {
             const eveningAthkar = [
                 { text: "أعوذ بكلمات الله التامات من شر ما خلق.", repeat: 3 },
-
-
                 { text: "اللهم إني أمسيت أشهدك وأشهد حملة عرشك وملائكتك وجميع خلقك أنك أنت الله لا إله إلا أنت وحدك لا شريك لك وأن محمدا عبدك ورسولك.", repeat: 4 },
                 { text: "اللهم بك أمسينا، وبك أصبحنا، وبك نحيا، وبك نموت وإليك المصير.", repeat: 1 },
                 { text: "أمسينا وأمسى الملك لله، والحمد لله، لا إله إلا الله وحده لا شريك له، له الملك وله الحمد وهو على كل شيء قدير.", repeat: 1 },
