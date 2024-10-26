@@ -63,11 +63,25 @@
         .dark-mode-toggle:hover {
             background-color: #004d40;
         }
+        .video-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
         iframe {
             width: 100%;
-            height: 315px;
+            height: 200px;
             border-radius: 10px;
-            margin-top: 20px;
+            border: 2px solid #00796b;
+        }
+        .search-bar {
+            margin: 20px 0;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            width: 80%;
+            max-width: 400px;
             border: 2px solid #00796b;
         }
     </style>
@@ -79,6 +93,7 @@
         <input type="text" id="serial-input" placeholder="الرقم التسلسلي المكون من 20 رقمًا" maxlength="20">
         <br>
         <button onclick="login()">الدخول</button>
+        <button onclick="resetData()">إعادة ضبط</button>
         <p>إذا كنت جديد ولا تملك رقم تسلسلي خاص بك</p>
         <button onclick="generateSerial()">الحصول على رقم تسلسلي جديد</button>
     </div>
@@ -87,6 +102,9 @@
         <button class="dark-mode-toggle" onclick="toggleDarkMode()">تبديل الوضع الليلي</button>
 
         <h1>أذكار الصباح والمساء والقرآن الكريم</h1>
+        
+        <input type="text" class="search-bar" id="searchAthkar" placeholder="ابحث عن ذكر معين..." onkeyup="searchAthkar()">
+        
         <button onclick="showMorning()">أذكار الصباح</button>
         <button onclick="showEvening()">أذكار المساء</button>
         <button onclick="showRandom()">ذكر عشوائي</button>
@@ -100,26 +118,8 @@
         <div id="surah-content" class="surah-content" style="display:none;"></div>
         <div class="coming-soon">سوف يتم وضع السور المتبقية قريبًا</div>
 
-        <div id="video-list" style="display:none;">
-            <iframe src="https://www.youtube.com/embed/5Yf2pH_U9E4" title="الشيخ نبيل العوضي - قصص الأنبياء"></iframe>
-            <hr>
-            <iframe src="https://www.youtube.com/embed/kZRmGbk9LfM" title="الداعية مصطفى حسني - كنوز"></iframe>
-            <hr>
-            <iframe src="https://www.youtube.com/embed/ISNDD_HpWcc" title="الشيخ عائض القرني - لا تحزن"></iframe>
-            <hr>
-            <iframe src="https://www.youtube.com/embed/ZyPn0qoc6mM" title="محمد العريفي - العقيدة الإسلامية"></iframe>
-            <hr>
-            <iframe src="https://www.youtube.com/embed/IfUJj5EBGpQ" title="إبراهيم الدويش - يوميات مسلم"></iframe>
-            <hr>
-            <iframe src="https://www.youtube.com/embed/h4Q2snMeNTg" title="الشيخ محمود المصري - طريق التوبة"></iframe>
-            <hr>
-            <iframe src="https://www.youtube.com/embed/sV8OlcfiVdI" title="الشيخ عمر عبد الكافي - إعجاز القرآن"></iframe>
-            <hr>
-            <iframe src="https://www.youtube.com/embed/tcql7yGYgAE" title="الداعية أحمد الشقيري - خواطر"></iframe>
-            <hr>
-            <iframe src="https://www.youtube.com/embed/E7j-GuQNC0E" title="مشاري الخراز - كيف تتلذذ بالصلاة"></iframe>
-            <hr>
-            <iframe src="https://www.youtube.com/embed/KUu5zpGrVSg" title="محمد راتب النابلسي - الدرس اليومي"></iframe>
+        <div id="video-list" class="video-grid" style="display:none;">
+            <!-- Video iframes here -->
         </div>
     </div>
 
@@ -128,97 +128,59 @@
     </footer>
 
     <script>
-        let currentSerial = '';
+        // Load Dark Mode Preference
+        if (localStorage.getItem('darkMode') === 'enabled') {
+            document.body.classList.add('dark-mode');
+        }
 
         function login() {
             const serial = document.getElementById('serial-input').value;
             if (serial.length === 20) {
-                currentSerial = serial;
                 localStorage.setItem('userSerial', serial);
                 document.getElementById('login-screen').style.display = 'none';
                 document.getElementById('main-content').style.display = 'block';
+                setReminder(); // Set reminder on login
             } else {
                 alert('الرجاء إدخال رقم تسلسلي مكون من 20 رقمًا.');
             }
         }
 
-        function generateSerial() {
-            const serial = 'xxxxxxxxxxxxxxxxxxxx'.replace(/[x]/g, () => (Math.random() * 9 | 0).toString());
-            currentSerial = serial;
-            localStorage.setItem('userSerial', serial);
-            alert(`رقمك التسلسلي: ${serial}\nصور الشاشة، لكي لا تنسى الرقم التسلسلي الخاص بك!`);
-            alert("فائده الرقم التسلسلي: عند إضافه ذكر تود حفظه عندك، لن يختفي عند خروجك من الموقع وعودتك مجددًا");
-            document.getElementById('login-screen').style.display = 'none';
-            document.getElementById('main-content').style.display = 'block';
+        function resetData() {
+            if (confirm('هل أنت متأكد من إعادة الضبط؟ سيتم حذف جميع الأذكار المحفوظة.')) {
+                localStorage.clear();
+                alert('تمت إعادة الضبط بنجاح.');
+                location.reload();
+            }
         }
 
         function toggleDarkMode() {
             document.body.classList.toggle('dark-mode');
+            localStorage.setItem('darkMode', document.body.classList.contains('dark-mode') ? 'enabled' : 'disabled');
         }
 
-        function showMorning() {
-            document.getElementById('athkar').innerHTML = `
-                <h2>أذكار الصباح</h2>
-                <p>بسم الله الذي لا يضر مع اسمه شيء في الأرض ولا في السماء وهو السميع العليم. (ثلاث مرات)</p>
-                <hr>
-                <p>اللهم بك أصبحنا، وبك أمسينا، وبك نحيا، وبك نموت وإليك النشور.</p>
-                <hr>
-                <p>أصبحنا على فطرة الإسلام، وعلى كلمة الإخلاص، وعلى دين نبينا محمد ﷺ، وعلى ملة أبينا إبراهيم، حنيفًا مسلمًا وما كان من المشركين.</p>
-                <hr>`;
-        }
-
-        function showEvening() {
-            document.getElementById('athkar').innerHTML = `
-                <h2>أذكار المساء</h2>
-                <p>أعوذ بكلمات الله التامات من شر ما خلق. (ثلاث مرات)</p>
-                <hr>
-                <p>اللهم إني أسألك العافية في الدنيا والآخرة، اللهم إني أسألك العفو والعافية في ديني ودنياي وأهلي ومالي.</p>
-                <hr>
-                <p>اللهم أنت ربي لا إله إلا أنت، خلقتني وأنا عبدك، وأنا على عهدك ووعدك ما استطعت، أعوذ بك من شر ما صنعت، أبوء لك بنعمتك علي وأبوء بذنبي فاغفر لي، فإنه لا يغفر الذنوب إلا أنت.</p>
-                <hr>`;
-        }
-
-        function showRandom() {
-            const adhkar = [
-                'اللهم بك أصبحنا وبك أمسينا وبك نحيا وبك نموت وإليك المصير.',
-                '```
-اللهم بك أصبحنا وبك أمسينا وبك نحيا وبك نموت وإليك المصير.',
-                'اللهم إني أعوذ بك من الهم والحزن، وأعوذ بك من العجز والكسل.',
-                'أستغفر الله العظيم الذي لا إله إلا هو الحي القيوم وأتوب إليه.'
-            ];
-            const randomIndex = Math.floor(Math.random() * adhkar.length);
-            alert(adhkar[randomIndex]);
-        }
-
-        function addPersonalAthkar() {
-            const personalAthkar = prompt('أضف ذكرك الشخصي:');
-            const repetition = prompt('كم مرة تريد تكرار الذكر؟');
-            if (personalAthkar && repetition) {
-                localStorage.setItem('personalAthkar', personalAthkar);
-                localStorage.setItem('repetition', repetition);
-                alert('تم حفظ الذكر الشخصي بنجاح');
+        function setReminder() {
+            if (Notification.permission === "granted") {
+                new Notification("تذكير بأذكار الصباح والمساء", { body: "لا تنسَ قراءة أذكارك اليوم!" });
+            } else if (Notification.permission !== "denied") {
+                Notification.requestPermission().then(permission => {
+                    if (permission === "granted") {
+                        new Notification("تذكير بأذكار الصباح والمساء", { body: "لا تنسَ قراءة أذكارك اليوم!" });
+                    }
+                });
             }
         }
 
-        function showFavorites() {
-            const personalAthkar = localStorage.getItem('personalAthkar');
-            const repetition = localStorage.getItem('repetition');
-            if (personalAthkar && repetition) {
-                document.getElementById('athkar').innerHTML = `
-                    <h2>الأذكار المحفوظة</h2>
-                    <p>${personalAthkar} ( ${repetition} مرات)</p>`;
-            } else {
-                alert('لا توجد أذكار محفوظة');
-            }
-        }
-
-        function showQuran() {
-            alert("مدري ليه مو راضي يضبط، والصراحه تعبت وانا احاول احل المشكله لاني حاولت كثير، المهم اصبروا لين يصير لي خلق وبإذن الله راح احاول من جديد ويشتغل معكم👍🏻");
+        function searchAthkar() {
+            const query = document.getElementById('searchAthkar').value.toLowerCase();
+            const athkarElements = document.querySelectorAll('.athkar p');
+            athkarElements.forEach(athkar => {
+                athkar.style.display = athkar.innerText.toLowerCase().includes(query) ? 'block' : 'none';
+            });
         }
 
         function showVideos() {
             const videoList = document.getElementById('video-list');
-            videoList.style.display = videoList.style.display === 'none' ? 'block' : 'none';
+            videoList.style.display = videoList.style.display === 'none' ? 'grid' : 'none';
         }
     </script>
 </body>
